@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+    <link rel="stylesheet" href="css/success_cancel.css">
+    <title>Success Payment</title>
+</head>
+
+<body>
+    <header>
+        <p class="logo"> SS </p>
+    </header>
+    <div class="sf-container">
+        <h1>Payment Successful!</h1>
+        <p>Thank you for choosing our site</p>
+        <img src="/images/success.png" alt="">
+        <a href="/">Back to home</a>
+    </div>
+    <script>
+        function setCookie(name, value, days, path) {
+            const data = new Date();
+            data.setTime(data.getTime() + (days * 24 * 60 * 60 * 1000))
+            let expires = "expires=" + data.toUTCString();
+            document.cookie = `${name}=${value};${expires};path=${path}`
+        }
+        function deleteCookie(name) {
+            setCookie(name, null, null)
+        }
+        deleteCookie("cart")
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Admin Login</title>
+</head>
+
+<body>
+    <header>
+        <p class="logo"> SS </p>
+
+        <div class="title">
+            <h1>Sportswear <br>Store</h1>
+        </div>
+    </header>
+
+    <!-- login form -->
+    <div class="form-login" id="login">
+        <h2>administrator Login</h2>
+        <div>
+            <div class="input-box">
+                <label for="username"> username </label>
+                <input id="username" type="text" required>
+                <i class='bx bxs-envelope'></i>
+            </div>
+            <div class="input-box">
+                <label for="password">Password</label>
+                <input id="password" type="password" required>
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+            <div class="rememberme">
+                <label>
+                    <input type="checkbox"> Remember me
+                </label>
+                <input type="reset" value="Clear">
+            </div>
+        </div>
+        <div>
+            <button onclick="login()"> Login </button>
+        </div>
+    </div>
+    <script>
+        class apiFecth {
+            static json(method_, path, callback, stringdata) {
+                fetch(path, {
+                    method: method_,
+                    body: stringdata,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }).then(re => re.json()).then((data) => {
+                    callback(data)
+                })
+            }
+            static Get(path, callback) {
+                fetch(path, { method: "GET" }).then(re => re.json()).then((data) => { callback(data) })
+            }
+            static From(method_, path, callback, stringdata) {
+                fetch(path, {
+                    method: method_, body: stringdata, headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                }).then(re => re.json()).then((data) => { callback(data) })
+            }
+        }
+        function login() {
+            admin = {
+                "username": document.getElementById("username").value,
+                "password": document.getElementById("password").value
+            }
+            apiFecth.From("POST", "/loginadmin", (data) => {
+                if (data.err != undefined) {
+                    let span = document.createElement("span")
+                    span.textContent = data.err
+                    document.getElementById("login").appendChild(span)
+                } else {
+                    window.location = "/admin/"
+                }
+            }, `username=${admin.username}&password=${admin.password}`)
+
+        }
+    </script>
+</body>
+
+</html>

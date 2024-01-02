@@ -1,0 +1,331 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root{
+    --main-bg-color:#1e1e2aea;
+    --white--color: #fff;
+    --main-color: #c8815f;
+    --text-color: #000;
+}
+html{font-family: 'Source Sans 3', sans-serif;}
+a{
+    text-decoration: none;
+}
+button{
+    border: none;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
+input{
+    font: inherit;
+    width: 100%;
+    border: none;
+}
+i, span{ display: inline-block; }
+label{ display: block; }
+
+input:focus { outline: 2px solid var(--main-color);}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button{
+    appearance: none;
+}
+.container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+header{
+    position: fixed;
+    width: 100%;
+    background: var(--white--color);
+    box-shadow: 0 1px 4px var(--text-color);
+    z-index: 10;
+}
+h1{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 15%;
+    max-width: 1100px;
+}
+.logo{
+    font-size: 50px;
+    font-weight: 599;
+    letter-spacing: 6px;
+    color: #c8805f;
+    font-family: 'Akronim';
+    font-style: italic;
+    text-shadow: rgba(214, 161, 14, 0.899)3px 3px 2px , rgba(188, 166, 19, 0.988) -3px -3px 2px;
+}
+.header-title{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-color);
+    letter-spacing: 1.2px;
+}
+.header-title i{
+    font-weight: 800;
+    font-size: 3.3rem;
+}
+.item-flex{
+    margin-top: 7.5rem;
+    display: flex;
+    flex-grow: 1;
+}
+.checkout{
+    width: 65%;
+    padding: 1.2rem 48px;
+    background: var(--white--color);
+    box-shadow: 1px 5px 4px 0 var(--text-color);
+    z-index: 1;
+}
+.section-heading{
+    margin-bottom: 33px;
+    color: var(--text-color);
+    font-size: 25px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+.payment-form{
+    margin-bottom: 40px;
+    padding-left: 8px;
+}
+.payment-method{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+.payment-method button:active{
+    scale: .97;
+}
+.method{
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 2%;
+    width: 35%;
+    box-shadow: 1px 1px 1.8px 1px var(--main-color);
+    border-radius: 5.5px;
+    font-size: large;
+    font-weight: 500;
+    letter-spacing: 3.5px;
+    color: var(--text-color);
+}
+.method2{
+    width: 35%;
+    box-shadow: 1px 1px 1.8px 1px var(--main-color);
+    border-radius: 5.5px;
+    font-size: large;
+    font-weight: 500;
+    letter-spacing: 3.5px;
+}
+.method2 a{
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 2%;
+    color: var(--text-color);
+}
+.method3{
+    display: flex;
+    justify-content: space-between;
+    width: 25%;
+    padding: 5px 3px 0 6px;
+    box-shadow: 1px 1px 1.8px 1px var(--main-color);
+    border-radius: 5.5px;
+    font-size: large;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+.method i{
+    font-size: larger;
+}
+
+.label-default{
+    margin-bottom: 5px;
+    font-size: 18px;
+    letter-spacing: 1.5px;
+    color: var(--text-color);
+}
+.input-default{
+    background: #1e1e2a54;
+    border-radius: 7px;
+    color: var(--text-color);
+    margin-left: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    margin-bottom: 14px;
+}
+.input-default:focus{
+    background: var(--main-bg-color);
+    color: var(--white--color);
+}
+.input-flex{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.expire-date, .cvv {
+    width: 50%; 
+}
+.expire-date .input-flex{
+    gap: 10px;
+}
+.input-flex input{
+    text-align: center;
+}
+.pay-btn-width{
+    width: 100%;
+    margin: 0 42%;
+}
+.pay-btn{
+    padding: 15px;
+    background: var(--white--color);
+    border: 3px solid var(--main-color);
+    box-shadow: 1px 1px 1rem 1px var(--main-bg-color);
+    border-radius: 18px;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    width: 10rem;
+    letter-spacing: 1px;
+}
+.pay-btn:hover{
+    background: var(--main-color);
+}
+.pay-btn:active{
+    scale: .95;
+}
+.cart{
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.2rem 32px;
+    background: var(--white--color);
+    color: var(--text-color);
+}
+.cart-border{
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #1e1e2a54;
+}
+.product-card:not(:last-child) {
+    margin-bottom: 20px;
+}
+.card{
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+}
+.product-img{
+    border-radius: 15px;
+}
+.product-name{
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: .8px;
+}
+.wrapper{
+    display: flex;
+    gap: 25px;
+    font-size: 17px;
+}
+.product-qty{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.product-qty button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1e1e2a54;
+    width: 16px;
+    height: 12px;
+    border-radius: 4px;
+}
+.product-qty button:hover{
+    background: var(--main-color);
+}
+#product-delete-btn i{
+    font-size: 20px;
+    color: var(--main-bg-color);
+}
+#product-delete-btn i:hover{
+    color: #d60000;
+}
+.product-qty button:active,
+#product-delete-btn:active{
+    transform: scale(.92);
+}
+.total{
+    max-width: 300px;
+    margin: 1.75rem 0 0 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+/* responsive */
+@media (max-width: 1100px) {
+    .item-flex {
+        flex-direction: column-reverse;
+    }
+    .checkout{
+        width: 100%;
+        box-shadow: none;
+    }
+    .cart{
+        width: 100%;
+        border-bottom: 1px solid #1e1e2a54;
+    }
+    .cart-border{
+        border-bottom: none;
+    }
+    .product-card{
+        display: flex;
+        justify-content: center;
+        border: 1px solid #1e1e2a54;
+        padding: 7.5px;
+    }
+    .total{
+        max-width: 100%;
+        justify-content: center;
+        gap: 15%;
+    }
+}
+@media (max-width: 550px){
+    .payment-method,
+    .input-flex{
+        flex-direction: column;
+    }
+    .payment-method button{
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .expire-date,
+    .cvv{
+        width: 100%;
+    }
+    .expire-date .input-flex{
+        display: flex;
+        flex-direction: row;
+    }
+    .pay-btn-width{
+        margin: 0;
+    }
+    .pay-btn{
+        width: 100%;
+    }
+}

@@ -1,0 +1,54 @@
+body{
+    background:rgba(230, 218, 218, 0.652);
+}
+header{
+    margin-left: 15%;
+}
+.logo{
+    font-size: 50px;
+    font-weight: 599;
+    letter-spacing: 6px;
+    color: #c8805f;
+    font-family: 'Akronim';
+    font-style: italic;
+    text-shadow: rgba(214, 161, 14, 0.899)3px 3px 2px , rgba(188, 166, 19, 0.988) -3px -3px 2px;
+}
+.sf-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.sf-container h1{
+    text-align: center;
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+    letter-spacing: 2.5px;
+}
+.sf-container p{
+    max-width: 660px;
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+.sf-container img{
+    width: 200px;
+    margin: 2rem 0;
+}
+.sf-container a{
+    padding: 12px 20px;
+    border: 1px solid #fff;
+    border-radius: 2rem;
+    background: #c8815f;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: .5px;
+}
+.sf-container a:hover{
+    background: #fff;
+    color: #c8815f;
+    border-color: #c8815f;
+}

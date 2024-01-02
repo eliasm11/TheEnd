@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/selection.css">
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Men</title>
+</head>
+
+<body>
+    <!-- home titles -->
+    <header>
+        <p class="logo"> SS </p>
+
+        <ul class="navlist" id="navlist">
+            <li> <a href="/">Home</a> </li>
+        </ul>
+
+        <p class="men-text" id="m">{{$container:= .container}}{{$container}}</p>
+    </header>
+
+    <!-- home selections -->
+    <section class="list" onclick="Getproducts()">
+        <ul class="selections" id="kinds">
+            {{range .kinds}}
+            <li data-text="{{.}}" class="pants"><a href="{{$container}}/{{.}}">{{.}}</a></li>
+            {{end}}
+        </ul>
+    </section>
+
+    <!-- home pic-->
+    <div class="pic"> </div>
+
+    <!-- slider ad -->
+    <div class="slider">
+        <ul>
+            <li>
+                Get a chance to win an exclusive discount by following us on:
+            </li>
+            <li>
+                <i class='bx bxl-facebook-circle bx-spin'></i>Facebook
+            </li>
+            <li> <i class='bx bxl-instagram-alt bx-spin'></i>Instagram
+            </li>
+            <li> <i class='bx bxl-discord bx-spin'></i>Discord
+            </li>
+
+            <li> &nbsp; || &nbsp; </li>
+
+            <li>
+                Get a chance to win an exclusive discount by following us on:
+            </li>
+            <li>
+                <i class='bx bxl-facebook-circle bx-spin'></i>Facebook
+            </li>
+            <li> <i class='bx bxl-instagram-alt bx-spin'></i>Instagram
+            </li>
+            <li> <i class='bx bxl-discord bx-spin'></i>Discord
+            </li>
+        </ul>
+    </div>
+
+    <script src="js/selection.js"></script>
+    <style>
+        .pic {
+            position: absolute;
+            right: 5rem;
+            top: 15.5%;
+            background: url(/images/selection/{{.container}}.png);
+            height: 500px;
+            width: 318px;
+        }
+
+        .list {
+            background: url(/images/selection/other/stars1.png);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shirt::before {
+            content: '';
+            width: 80px;
+            height: 80px;
+            /* background: url(/images/selection/other/shirt.png); */
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(369px, 140px);
+            opacity: 0;
+            transition: .5s;
+        }
+
+
+        .pants::before {
+            content: '';
+            width: 80px;
+            height: 80px;
+            /*background: url(/images/selection/other/pants.png);*/
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(350px, 140px);
+            opacity: 0;
+            transition: .5s;
+        }
+
+        .shoes::before {
+            content: '';
+            width: 100px;
+            height: 100px;
+            /* background: url(/images/selection/other/shoes.png); */
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(375px, 188px);
+            opacity: 0;
+            transition: .5s;
+            scale: .7;
+        }
+    </style>
+</body>
+
+</html>

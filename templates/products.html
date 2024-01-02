@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/products.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+    <title>{{.kind}} for {{.container}}</title>
+</head>
+
+<body>
+    <!-- navbar -->
+    <header>
+        <div class="nav_container">
+            <p class="logo"> SS </p>
+            <i class='bx bx-shopping-bag bx-tada' id="cart-icon" data-quantity=""></i>
+            <div class="cart">
+                <h2 class="cart-title">Your Cart</h2>
+                <div class="cart-contant" id="cart-contant"></div>
+                <div class="total">
+                    <div class="total-title">Total</div>
+                    <div class="total-price"><span>$</span><span id="total-price">0</span></div>
+                </div>
+                <button type="button" class="btn-buy" id="orderNow"> Order Now </button>
+                <i class='bx bx-x' id="close-cart"></i>
+            </div>
+        </div>
+    </header>
+    <!-- product container -->
+    <section class="shop-container">
+        <h2 class="section-title">Exclusive {{.kind}} for {{.container}}</h2>
+        <div class="shop-content" id="shop-content">
+            <!-- box 1 -->
+            {{ range .listModels}}
+            <div class="product-box" id="p{{.Id}}">
+                {{range .LinkesImage}}
+                <img id="imgProduct" src="{{.}}" alt="" class="product-img">
+                {{end}}
+                <h2 class="product-title" id="Description">{{.Description}}</h2>
+                <div class="price-cart">
+                    <!-- Discount not work for now becase you need edit the server or use js -->
+                    <span class="price"><span>$</span><span id="price">{{.Price}}</span></span>
+                    <div class="color-size">
+                        <ul>
+                            <li>
+                                {{range $key , $e :=.Sizes}}
+                                {{range $key1 , $e1 := $e}}
+                                <div id="{{$key}}" class="color" onclick="checkColor(this)"
+                                    style="display: none ;background: {{$key1}};"></div>
+                                {{end}}
+                                {{end}}
+                            </li>
+                            <li class="size">
+                                {{range $key , $e :=.Sizes}}
+                                <span id="size" onclick="showColors(this)"> {{$key}} </span>
+                                {{end}}
+                            </li>
+                        </ul>
+
+                    </div>
+                    <ion-icon name="bag-add-outline" id="add-to-cart" onclick="addToCart(this)"></ion-icon>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </section>
+    <script>
+        var Order = new Map()
+        let ListProduct = new Map()
+
+
+        class ProductDataBase {
+            constructor(Obj) {
+                this.description = Obj.description
+                this.price = Obj.price
+                this.Img = Obj.linkesImage[0]
+                this.Discount = Obj.discount
+                this.sizes = Obj.sizes
+                this.Id = Obj.Id
+                this.commint = Obj.commint
+                this.element = document.createElement("div")
+                this.element.classList.add("product-box")
+                this.element.id = `p${Obj.id}`
+                let innerHTML = `
+            <img id="imgProduct" src="${this.Img}" alt="" class="product-img">
+            <h2 class="product-title" id="Description">${this.description}</h2>
+            <div class="price-cart">
+            <span class="price"><span>$</span><span id="price">${this.price}</span></span>
+            <div class="color-size">
+            <ul><li>`
+                let listofColor = ""
+                let listOfSize = ""
+                for (const h in this.sizes) {
+                    for (const q in this.sizes[h]) {
+                        listofColor += `<div id="${h}" class="color" onclick="checkColor(this)" style="display: none ;background: ${q};"></div>`
+                    }
+                    listOfSize += `<span id="size" onclick="showColors(this)">${h}</span>`
+                }
+                innerHTML += listofColor + '</li><li class="size">' + listOfSize + '</li></ul> </div> <ion-icon name="bag-add-outline" id="add-to-cart" onclick="addToCart(this)" role="img" class="md hydrated"></ion-icon> </div>'
+                this.element.innerHTML = innerHTML
+                document.getElementById("shop-content").appendChild(this.element)
+            }
+        }
+
+        let fetchTime = true
+        document.addEventListener('DOMContentLoaded', function (e) {
+            document.addEventListener('scroll', function (e) {
+                let documentHeight = document.body.scrollHeight;
+                let currentScroll = window.scrollY + window.innerHeight;
+                let modifier = 200;
+                if (currentScroll + modifier > documentHeight) {
+                    let lastid = document.getElementById("shop-content").children
+                    lastid = lastid[lastid.length - 1].id.replace("p", "")
+                    let containerAndKind = window.location.pathname
+                    containerAndKind = containerAndKind.replace("/", "").split("/")
+                    if (fetchTime) {
+                        fetch(`/product?kind=${containerAndKind[1]}&container=${containerAndKind[0]}&id=${lastid+1}`, {
+                            method: "GET"
+                        }).then(re => re.json()).then(data => {
+                            if (data != null) {
+                                for (const f of data) {
+                                   new ProductDataBase(f)
+                                }
+                            }
+                        })
+                        fetchTime = false 
+                    } else {
+                        setTimeout(() => { fetchTime = true }, 100)
+                    }
+                }
+            })
+        })
+        class ProductCookie {
+            constructor(product) {
+                this.id = product.id
+                this.whereIform = product.whereIform
+                this.price = product.price
+                this.Description = product.Description
+                this.color = product.color
+                this.size = product.size
+                this.img = product.img
+                this.qty = product.qty
+                this.elementHtml = document.createElement("div")
+                this.elementHtml.setAttribute("class", "cart-box")
+                this.elementHtml.innerHTML = ` <img src="${this.img}"alt="" class="cart-img">
+                                <div class="detail-box">
+                                    <div class="cart-product-title">${this.Description}t</div>
+                                    <div class="flex-details">
+                                        <span class="cart-price"><span>$</span><span>${this.price}</span></span>
+                                        <span id="size">${this.size}</span>
+                                        <span class="colortest" id="color" style="background:${this.color};"></span>
+                                    </div>
+                                    <input id="input" type="number" name="" value="${this.qty}" min="1" class="cart-quantity" />
+                                </div>
+                                <i class='bx bx-trash' id="cart-remove"></i>
+                            `
+                this.elementHtml.querySelector("#input").addEventListener("change", e => {
+                    var total = Number(document.getElementById("total-price").textContent)
+                    if ((this.qty - Number(e.target.value)) < 0) {
+                        total += (Number(e.target.value) - this.qty) * this.price
+                    } else if ((this.qty - Number(e.target.value)) > 0) {
+                        total -= (this.qty - Number(e.target.value)) * this.price
+                    }
+
+                    document.getElementById("total-price").textContent = total
+                    this.qty = Number(e.target.value)
+
+                    let json = JSON.stringify(Order)
+                    setCookie("cart", json, 344, "/")
+                })
+                this.elementHtml.querySelector("#cart-remove").addEventListener("click", e => {
+                    var total = Number(document.getElementById("total-price").textContent) - (this.qty * this.price)
+                    document.getElementById("total-price").textContent = total
+                    this.elementHtml.remove()
+                    for (let i = 0; i < Order[this.whereIform].length; i++) {
+                        if (Order[this.whereIform][i] == this) {
+                            Order[this.whereIform].splice(i, 1)
+                        }
+                    }
+                    let json = JSON.stringify(Order)
+                    setCookie("cart", json, 344, "/")
+                })
+                document.getElementById("cart-contant").appendChild(this.elementHtml)
+                document.getElementById("total-price").textContent = Number(document.getElementById("total-price").textContent) + this.price * this.qty
+            }
+            qtyChange() {
+                this.qty++
+                document.getElementById("total-price").textContent = Number(document.getElementById("total-price").textContent) + this.price
+                this.elementHtml.querySelector("#input").value = Number(this.elementHtml.querySelector("#input").value) + 1
+                let json = JSON.stringify(Order)
+                setCookie("cart", json, 344, "/")
+            }
+
+        }
+
+        class Product {
+            constructor(product) {
+                if (product == null) {
+                    return
+                }
+                this.whereIform = document.location.pathname
+                this.id = product.id
+                this.price = Number(product.querySelector("#price").innerText)
+                this.Description = product.querySelector("#Description").innerText
+                this.color = null
+                this.size = null
+                this.img = product.querySelector("#imgProduct").src
+                this.qty = 1
+                product.querySelectorAll(".color").forEach(element => {
+                    if (element.style.scale == 1.3) {
+                        this.color = element.style.background
+                    }
+                });
+                product.querySelectorAll("#size").forEach(element => {
+                    if (element.style.background == "black") {
+                        this.size = element.innerText
+                    }
+                });
+
+                if (this.color != null && this.size != null) {
+                    this.elementHtml = document.createElement("div")
+                    this.elementHtml.setAttribute("class", "cart-box")
+                    this.elementHtml.innerHTML = ` <img src="${this.img}"alt="" class="cart-img">
+                                <div class="detail-box">
+                                    <div class="cart-product-title">${this.Description}t</div>
+                                    <div class="flex-details">
+                                        <span class="cart-price"><span>$</span><span>${this.price}</span></span>
+                                        <span id="size">${this.size}</span>
+                                        <span class="colortest" id="color" style="background:${this.color};"></span>
+                                    </div>
+                                    <input id="input" type="number" name="" value="${this.qty}" min="1" class="cart-quantity" />
+                                </div>
+                                <i class='bx bx-trash' id="cart-remove"></i>
+                            `
+                    this.elementHtml.querySelector("#input").addEventListener("change", e => {
+                        var total = Number(document.getElementById("total-price").textContent)
+                        if ((this.qty - Number(e.target.value)) < 0) {
+                            total += (Number(e.target.value) - this.qty) * this.price
+                        } else if ((this.qty - Number(e.target.value)) > 0) {
+                            total -= (this.qty - Number(e.target.value)) * this.price
+                        }
+
+                        document.getElementById("total-price").textContent = total
+                        this.qty = Number(e.target.value)
+                        let json = JSON.stringify(Order)
+                        setCookie("cart", json, 344, "/")
+                    })
+                    this.elementHtml.querySelector("#cart-remove").addEventListener("click", e => {
+                        var total = Number(document.getElementById("total-price").textContent) - (this.qty * this.price)
+                        document.getElementById("total-price").textContent = total
+                        this.elementHtml.remove()
+                        for (let i = 0; i < Order[document.location.pathname].length; i++) {
+                            if (Order[document.location.pathname][i] == this) {
+                                Order[document.location.pathname].splice(i, 1)
+                            }
+                        }
+
+                        let json = JSON.stringify(Order)
+                        setCookie("cart", json, 344, "/")
+
+                    })
+
+                }
+            }
+            qtyChange() {
+                this.qty++
+                document.getElementById("total-price").textContent = Number(document.getElementById("total-price").textContent) + this.price
+                this.elementHtml.querySelector("#input").value = Number(this.elementHtml.querySelector("#input").value) + 1
+                let json = JSON.stringify(Order)
+                setCookie("cart", json, 344, "/")
+            }
+
+        }
+
+
+
+        if (getCoookie("cart").length != 0) {
+            let cookieCart = JSON.parse(getCoookie("cart"))
+            let cart = document.getElementById("cart-contant")
+            for (const cartC in cookieCart) {
+                let NewArry = [];
+                for (const f of Object.values(cookieCart[cartC])) {
+                    NewArry[NewArry.length] = new ProductCookie(f);
+                }
+                Order[cartC] = NewArry;
+
+            }
+        }
+
+
+
+        function addToCart(parent) {
+            while (parent.attributes.class.value != "product-box") {
+                parent = parent.parentElement
+            }
+            let p = new Product(parent)
+            if (p.size == null || p.color == null) {
+                return
+            }
+            if (Order[document.location.pathname] == undefined) {
+                Order[document.location.pathname] = new Array()
+            }
+            for (const order of Order[document.location.pathname]) {
+                let element = order;
+                if (p.color == element.color && p.id == element.id && element.size == p.size) {
+                    element.qtyChange();
+                    return
+                }
+            }
+
+            Order[document.location.pathname][Order[document.location.pathname].length] = p
+            document.getElementById("cart-contant").appendChild(p.elementHtml)
+            document.getElementById("total-price").textContent = Number(document.getElementById("total-price").textContent) + p.price
+        }
+
+
+        function showColors(sizeName) {
+
+            var listColor = sizeName.parentElement.parentElement.children[0].children;
+            var sizeList = sizeName.parentElement.children
+            for (const node of sizeList) {
+                if (node.innerText == sizeName.innerText) {
+                    node.style.background = "black"
+                } else {
+                    node.style.background = null
+                }
+
+            }
+            for (const node of listColor) {
+                if (node.id === sizeName.innerText) {
+                    node.style.display = "block";
+                } else {
+                    node.style.display = "none";
+                    node.style.scale = 1
+                }
+            }
+
+        }
+        function checkColor(colorIn) {
+            var listColor = colorIn.parentElement.children
+            for (const colors of listColor) {
+                if (colorIn == colors) {
+                    colors.style.scale = 1.3
+                } else {
+                    colors.style.scale = 1
+                }
+            }
+        }
+        document.getElementById("orderNow").addEventListener("click", e => {
+            if (!HasItem()) {
+                return
+            }
+            let json = JSON.stringify(Order)
+            setCookie("cart", json, 344, "/")
+            window.location = window.location.origin + "/user/checkout"
+        })
+
+
+        let cartIcon = document.querySelector('#cart-icon');
+        let cart = document.querySelector('.cart');
+        let closeCart = document.querySelector('#close-cart');
+
+        // open cart
+        cartIcon.onclick = () => {
+            cart.classList.add('active');
+        }
+        // close cart
+        closeCart.onclick = () => {
+            cart.classList.remove('active');
+        }
+        function setCookie(name, value, days, path) {
+            const data = new Date();
+            data.setTime(data.getTime() + (days * 24 * 60 * 60 * 1000))
+            let expires = "expires=" + data.toUTCString();
+            document.cookie = `${name}=${value};${expires};path=${path}`
+        }
+
+        function deleteCookie(name) {
+            setCookie(name, null, null)
+        }
+        function getCoookie(name) {
+            const cookie = decodeURIComponent(document.cookie).replace(`${name}=`, "")
+            return cookie
+        }
+        function HasItem() {
+            for (const d in Order) {
+                for (const f in Order[d]) {
+                    if (f.length > 0) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+    </script>
+    <!--link to js-->
+    <!-- <script src="/js/products.js"></script> -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

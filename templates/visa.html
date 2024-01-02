@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/visa.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+    <title>Payment</title>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>
+                <div>
+                    <p class="logo"> SS </p>
+                </div>
+    
+                <div class="header-title">
+                    <i class='bx bxl-visa bx-flashing' ></i>CARD
+                </div>
+            </h1>
+        </header>
+
+        <div class="item-flex">
+            <!-- add visa section -->
+            <section class="checkout">
+                <h2 class="section-heading">Add Paypal or a new Visa card</h2>
+                <div class="payment-form">
+                    <div class="payment-method">
+                        <button class="method">
+                            <div>
+                                <i class='bx bxl-visa'></i>
+                                <span>Visa Card</span>
+                            </div>
+                            <div><i class='bx bxs-check-circle' id="checking"></i></div>
+                        </button>
+
+                        <button class="method2">
+                            <a href="https://www.paypal.com/signin" target="_blank" rel="noopener noreferrer">
+                                <div>
+                                    <i class='bx bxl-paypal'></i>
+                                    <span>PayPal</span>
+                                </div>
+                                <div><i class='bx bx-check-circle' id="checking"></i></div>
+                            </a>
+                        </button>
+                    </div>
+                    <form action="#">
+
+                        <div class="cardholder-name">
+                            <label for="cardholder-name" class="label-default"> Cardholder name</label>
+                            <input type="text" name="cardholder-name" id="cardholder-name" class="input-default"
+                            placeholder="Name on card">
+                        </div>
+
+                        <div class="Visa_number">
+                            <label for="Visa_number" class="label-default"> Visa number </label>
+                            <input type="number" name="Visa_number" id="Visa_number" class="input-default"
+                            placeholder="**** **** **** ****">
+                        </div>
+
+                        <div class="input-flex">
+                            <div class="expire-date">
+                                <span class="label-default">Expiration date</span>
+                            
+                                <div class="input-flex">
+                                   <input type="number" name="day" placeholder="31"
+                                     min="1" max="31" class="input-default">
+                                    /
+                                    <input type="number" name="month" placeholder="12"
+                                     min="1" max="12" class="input-default">
+                                </div>
+                            </div>
+
+                            <div class="cvv">
+                                <label for="cvv" class="label-default"> CVV</label>
+                                <input type="number" name="cvv" id="cvv" class="input-default" placeholder="* * *">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="pay-btn-width">
+                    <button class="pay-btn">
+                        Add Visa</span>
+                    </button>
+                </div>
+                
+            </section>
+
+            <section class="cards">
+                <h2 class="section-heading">Payment cards</h2>
+
+                <div class="card-flex">
+                    <div class="card-box">
+                        <i class='bx bxl-visa' ></i>
+                        <div class="card-info">
+                            <span class="card-number">**** **** **** *759</span>
+                            <i class='bx bx-trash'></i>
+                        </div>
+                    </div>
+
+                    <div class="card-box">
+                        <i class='bx bxl-visa' ></i>
+                        <div class="card-info">
+                            <span class="card-number">**** **** **** *427</span>
+                            <i class='bx bx-trash'></i>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <script src="/js/payment.js"></script>
+</body>
+</html>

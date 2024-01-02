@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/payment.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+    <title>Payment</title>
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <h1>
+                <div>
+                    <p class="logo"> SS </p>
+                </div>
+                <div class="header-title">
+                    <i class='bx bx-cart'></i> Shopping cart
+                </div>
+            </h1>
+        </header>
+        <div class="item-flex">
+            <!-- checkout section -->
+            <section class="checkout">
+                <h2 class="section-heading">Payment Details</h2>
+                <div class="payment-form">
+                    <div class="payment-method">
+                        <button class="method">
+                            <div>
+                                <i class='bx bxl-visa'></i>
+                                <span>Visa Card</span>
+                            </div>
+                            <div><i class='bx bx-check-circle bxs-check-circle'
+                                    style="font-size: larger; color: var(--main-color);" id="addnewvisa"
+                                    onclick="hideMetodPay(this)"></i></div>
+                        </button>
+
+                        <button class="method2">
+                            <a href="https://www.paypal.com/signin" target="_blank" rel="noopener noreferrer">
+                                <div>
+                                    <i class='bx bxl-paypal'></i>
+                                    <span>PayPal</span>
+                                </div>
+                                <div><i class='bx bx-check-circle'
+                                        style="font-size: larger; color: var(--main-color);"></i></div>
+
+                            </a>
+                        </button>
+                        <button class="method3" style="scale: 0;" id="oldvias">
+                            <span id="oldNumber">**** **** **** *759</span>
+                            <div><i class='bx bx-check-circle' style="font-size: larger; color: var(--main-color);"
+                                    id="visa" onclick="hideMetodPay(this)"></i></div>
+                        </button>
+                    </div>
+                    <div>
+                        <div class="cardholder-name">
+                            <label for="cardholder-name" class="label-default">Your Name</label>
+                            <input type="text" name="cardholder-name" id="cardholder-name" class="input-default"
+                                placeholder="Your Name">
+                        </div>
+
+                        <div class="mobile-number">
+                            <label for="mobile-number" class="label-default"> Mobile number </label>
+                            <input type="number" min="0" name="mobile-number" id="mobile-number" class="input-default"
+                                placeholder="07**">
+                        </div>
+
+                        <div class="address">
+                            <label for="address" class="label-default"> Address</label>
+                            <input type="text" name="address" id="address" class="input-default"
+                                placeholder=" city / street /town / ">
+                        </div>
+
+                        <div class="Visa_number" id="VisaNumberDiv">
+                            <label for="Visa_number" class="label-default"> Visa number </label>
+                            <input type="number" name="Visa_number" id="Visa_number" class="input-default"
+                                placeholder="**** **** **** ****">
+                        </div>
+
+                        <div class="input-flex" id="expireDateDiv">
+                            <div class="expire-date">
+                                <span class="label-default">Expiration date</span>
+
+                                <div class="input-flex">
+                                    <input type="number" name="day" placeholder="31" min="1" max="31"
+                                        class="input-default" id="expire-dateDays">
+                                    /
+                                    <input type="number" name="month" id="expire-dateMonth" placeholder="12" min="1"
+                                        max="12" class="input-default">
+                                </div>
+                            </div>
+
+                            <div class="cvv" id="cvvDiv">
+                                <label for="cvv" class="label-default"> CVV</label>
+                                <input type="number" name="cvv" id="cvv" class="input-default" placeholder="* * *">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pay-btn-width">
+                    <button class="pay-btn" onclick="Pay()">
+                        <b>Pay</b> $<span id="payamount">0</span>
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- cart section -->
+            <section class="cart">
+                <div class="cart-border" id="cart-border">
+                    <h2 class="section-heading">Order Product</h2>
+                    <div class="total" id="totalBefor">
+                        <span>Total:</span> <span>$<span id="total">0</span></span>
+                    </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- <script src="payment.js"></script> -->
+    <script>
+        var Order = new Map()
+        var methodPay = "add"
+        class apiFecth {
+            static json(method_, path, callback, stringdata) {
+                fetch(path, {
+                    method: method_,
+                    body: stringdata,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }).then(re => re.json()).then((data) => {
+                    callback(data)
+                })
+            }
+            static Get(path, callback) {
+                fetch(path, { method: "GET" }).then(re => re.json()).then((data) => { callback(data) })
+            }
+            static From(method_, path, callback, stringdata) {
+                fetch(path, {
+                    method: method_, body: stringdata, headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                }).then(re => re.json()).then((data) => { callback(data) })
+            }
+        }
+
+        class User {
+            constructor() {
+                this.name = ""
+                this.viasNumber = ""
+                this.cvv = ""
+                this.phone = ""
+                this.addr = ""
+                this.expiresData = ""
+            }
+        }
+
+        var user = new User()
+
+        apiFecth.Get("/user/username", (data) => {
+            document.getElementById("cardholder-name").value = data
+            user.name = data
+        })
+
+        apiFecth.Get("/user/phone", (data) => {
+            document.getElementById("mobile-number").value = data
+            user.phone = data
+        })
+
+        apiFecth.Get("/user/addr", (data) => {
+            if (data.city != undefined && data.city.length != 0) {
+                let addr = `${data.city} / ${data.street} / ${data.area}`
+                document.getElementById("address").value = addr
+                user.addr = addr.trim()
+            }
+        })
+
+        function Pay() {
+            let name = document.getElementById("cardholder-name").value
+            let phone = document.getElementById("mobile-number").value
+            let addr = document.getElementById("address").value.trim()
+            let numberOfvias = document.getElementById("Visa_number").value
+            let expireDateDays = document.getElementById("expire-dateDays").value
+            let expireDateMonth = document.getElementById("expire-dateMonth").value
+            let cvv = document.getElementById("cvv").value
+
+            if (name.length == 0 || phone.length == 0 || addr.length == 0) return
+            if (methodPay == 'add') {
+                if (numberOfvias.length == 0 || expireDateDays.length == 0 || expireDateMonth.length == 0 ||
+                    cvv.length == 0) return;
+            }
+            fetch("/user/name", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `Name=${name}`,
+            }).then(Response => Response.json()).then(data => {
+                if (data != "update") {
+                    //error to user 
+                    alert(data)
+                    // alert("202")
+                    return true
+                }
+                return false
+            }).then((err) => {
+                if (err) return err
+                fetch("/user/phone", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: `phone=${phone}`,
+                }).then(Response => Response.json()).then(data => {
+                    if (data != "update") {
+                        alert(data)
+                        // alert("213")
+                        return true
+                    }
+                    return false
+                }).then((err) => {
+                    if (err) return err
+                    let arrayOfaddr = addr.split("/")
+                    addrTosever = {
+                        "city": arrayOfaddr[0],
+                        "street": arrayOfaddr[1],
+                        "area": arrayOfaddr[2]
+                    }
+
+                    fetch("/user/addr", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(addrTosever),
+                    }).then(Response => Response.json()).then(data => {
+                        if (data != "update") {
+                            alert(data)
+                            // alert("234")
+                            return true
+                        }
+                        return false
+                    }).then((err) => {
+                        if (err) return err
+                        if (methodPay == 'add') {
+                            let z = ""
+                            if (expireDateDays.length == 1) {
+                                z += "0" + `${expireDateDays}`
+                            } else {
+                                z += expireDateDays
+                            }
+                            z += "/"
+                            if (expireDateMonth.length == 1) {
+                                z += "0" + `${expireDateMonth}`
+                            } else {
+                                z += expireDateMonth
+                            }
+                            visaTosever = {
+                                "number": numberOfvias,
+                                "cvv": cvv,
+                                "expirationData": z
+                            }
+                            fetch("/user/visa", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(visaTosever),
+                            }).then(Response => Response.json()).then(data => {
+                                if (data != "add visa") {
+                                    alert(data)
+                                    // alert("266")
+                                    return true
+                                }
+                                return false
+                            }).then((err) => {
+                                if (err) return err
+                                let ordersToServer = []
+                                for (const d in Order) {
+                                    for (const s of Order[d]) {
+                                        let ContainerAndKind = s.whereIform.split("/")
+                                        for (let count = 0; count < s.qty; count++) {
+                                            ordersToServer[ordersToServer.length] = {
+                                                "idModel": Number(s.id.replace("p", "")),
+                                                "color": s.color,
+                                                "size": s.size,
+                                                "Container": ContainerAndKind[1],
+                                                "Kind": ContainerAndKind[2]
+                                            }
+                                        }
+
+                                    }
+                                }
+                                if (ordersToServer.length == 0) return;
+                                fetch("/user/buy", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(ordersToServer),
+                                }).then(response => response.json()).then(result => {
+                                    if (result != "OK") {
+                                        alert(result)
+                                        // alert("297")
+                                    } else {
+                                        window.location = "/success"
+                                    }
+                                })
+
+                            })
+                        } else {
+                            let ordersToServer = []
+                            for (const d in Order) {
+                                for (const s of Order[d]) {
+                                    let ContainerAndKind = s.whereIform.split("/")
+                                    for (let count = 0; count < s.qty; count++) {
+                                        ordersToServer[ordersToServer.length] = {
+                                            // if err come here 
+                                            "idModel": Number(s.id.replace("p", "")),
+                                            "color": s.color,
+                                            "size": s.size,
+                                            "Container": ContainerAndKind[1],
+                                            "Kind": ContainerAndKind[2]
+                                        }
+                                    }
+
+                                }
+                            }
+                            console.log(ordersToServer)
+                            if (ordersToServer.length == 0) return;
+                            fetch("/user/buy", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(ordersToServer),
+                            }).then(response => response.json()).then(result => {
+                                if (result != "OK") {
+                                    alert(result)
+                                    alert("332")
+                                } else {
+                                    window.location = "/success"
+                                }
+                            })
+                        }
+                    })
+                })
+
+            })
+        }
+
+        apiFecth.Get("/user/visa", (data) => {
+            if (data.length != 0) {
+                document.getElementById("oldvias").style.scale = 1
+                let toElias = ""
+                for (let x = 0; x < data.length; x++) {
+                    if (x % 4 == 0) {
+                        toElias += " "
+                    }
+                    if (x < 5) {
+                        toElias += "*"
+                    } else {
+                        toElias += data[x]
+                    }
+                }
+                document.getElementById("oldNumber").textContent = toElias
+            }
+        })
+
+        function hideMetodPay(id) {
+            id.classList.add("bxs-check-circle")
+            if (id.id == "addnewvisa") {
+                document.getElementById("visa").classList.remove("bxs-check-circle")
+                document.getElementById("cvvDiv").style.scale = 1
+                document.getElementById("VisaNumberDiv").style.scale = 1
+                document.getElementById("expireDateDiv").style.scale = 1
+                methodPay = "add"
+            } else if (id.id == "visa") {
+                document.getElementById("addnewvisa").classList.remove("bxs-check-circle")
+                document.getElementById("cvvDiv").style.scale = 0
+                document.getElementById("VisaNumberDiv").style.scale = 0
+                document.getElementById("expireDateDiv").style.scale = 0
+                methodPay = "old"
+            }
+        }
+
+        class ProductCookie {
+            constructor(product) {
+                this.id = product.id
+                this.whereIform = product.whereIform
+                this.price = product.price
+                this.Description = product.Description
+                this.color = product.color
+                this.size = product.size
+                this.img = product.img
+                this.qty = product.qty
+                this.elementHtml = document.createElement("div")
+                this.elementHtml.setAttribute("class", "product-card")
+                this.elementHtml.innerHTML = ` 
+                        <div class="card">
+                            <div class="img-box">
+                                <img src="${this.img}"alt="SS Product" width="90px" class="product-img">
+                            </div>
+                            <div class="detail">
+                                <h4 class="product-name">${this.Description}</h4>
+                                <div class="wrapper">
+                                    <div class="product-qty">
+                                        <button id="decrement">
+                                            <i class='bx bx-minus' id="bx-minus" ></i>
+                                        </button>
+                                        <span id="quantity">${this.qty}</span>
+                                        <button id="increment">
+                                            <i class='bx bx-plus' id="bx-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="price">
+                                        $<span id="price">${this.price}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="product-delete-btn">
+                                <i class='bx bxs-trash'></i>
+                            </button>
+                        </div> `
+                this.elementHtml.querySelector("#bx-minus").addEventListener("click", e => {
+                    if (this.qty == 1) {
+                        return
+                    }
+                    this.qty--
+                    let total = Number(document.getElementById("total").textContent) - this.price
+                    document.getElementById("payamount").textContent = Number(document.getElementById("payamount").textContent) - this.price
+                    this.elementHtml.querySelector("#quantity").textContent = this.qty
+                    document.getElementById("total").textContent = total
+
+                })
+                this.elementHtml.querySelector("#bx-plus").addEventListener("click", e => {
+                    document.getElementById("total").textContent = Number(document.getElementById("total").textContent) + this.price
+                    document.getElementById("payamount").textContent = Number(document.getElementById("payamount").textContent) + this.price
+                    this.qty++
+                    this.elementHtml.querySelector("#quantity").textContent = this.qty
+                })
+                this.elementHtml.querySelector("#product-delete-btn").addEventListener("click", e => {
+                    let total = Number(document.getElementById("total").textContent) - (this.qty * this.price)
+                    document.getElementById("payamount").textContent = Number(document.getElementById("payamount").textContent) - this.price * this.qty
+                    document.getElementById("total").textContent = total
+                    this.elementHtml.remove()
+                    for (let i = 0; i < Order[this.whereIform].length; i++) {
+                        if (Order[this.whereIform][i] == this) {
+                            Order[this.whereIform].splice(i, 1)
+                        }
+                    }
+                    let json = JSON.stringify(Order)
+                    setCookie("cart", json, 344, "/")
+                })
+
+                document.getElementById("cart-border").insertBefore(this.elementHtml, document.getElementById("totalBefor"))
+                document.getElementById("total").textContent = Number(document.getElementById("total").textContent) + this.price * this.qty
+                document.getElementById("payamount").textContent = Number(document.getElementById("payamount").textContent) + this.price * this.qty
+            }
+            qtyChange() {
+                this.qty++
+                document.getElementById("total").textContent = Number(document.getElementById("total").textContent) + this.price
+                document.getElementById("payamount").textContent = Number(document.getElementById("payamount").textContent) + this.price * this.qty
+                this.elementHtml.querySelector("#input").value = Number(this.elementHtml.querySelector("#input").value) + 1
+                let json = JSON.stringify(Order)
+                setCookie("cart", json, 344, "/")
+
+            }
+
+        }
+
+        function getCookieValue(name) {
+            const regex = new RegExp(`(^| )${name}=([^;]+)`)
+            const match = document.cookie.match(regex)
+            if (match) {
+                return match[2]
+            }
+        }
+
+        if (getCookieValue("cart") != undefined) {
+            let cookieCart = JSON.parse(getCookieValue("cart"))
+            let cart = document.getElementById("cart-contant")
+            for (const cartC in cookieCart) {
+                let NewArry = [];
+                for (const f of Object.values(cookieCart[cartC])) {
+                    NewArry[NewArry.length] = new ProductCookie(f);
+                }
+                Order[cartC] = NewArry;
+
+            }
+
+        }
+
+        function setCookie(name, value, days, path) {
+            const data = new Date();
+            data.setTime(data.getTime() + (days * 24 * 60 * 60 * 1000))
+            let expires = "expires=" + data.toUTCString();
+            document.cookie = `${name}=${value};${expires};path=${path}`
+        }
+
+        function deleteCookie(name) {
+            setCookie(name, null, null)
+        }
+
+    </script>
+</body>
+
+</html>

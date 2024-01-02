@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content=" Sportswear Store // Clothes Store // login to Sportswear Store ">
+    <meta name="keywords" content="Sportswear Store , SS , login Sportswear Store , Clothes ">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/interface.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+    <title> Sportswear Store </title>
+
+</head>
+
+<body>
+    <!-- header -->
+    <header>
+
+        <p class="logo"> SS </p>
+
+        <ul class="navlist" id="navlist">
+        </ul>
+
+        <div class="headerlogin-icon">
+            {{if .guest}}
+            <a title="Profile"><i class='bx bx-user-circle'></i></a>
+            {{else}}
+            <i id="setting-icon" class='bx bx-cog' onclick="getIfonUser()"></i>
+            {{end}}
+        </div>
+
+    </header>
+
+
+    <!-- home text -->
+    <section class="home">
+        <div class="home-text">
+            <h1>Sportswear <br> <span>-Store-</span> </h1>
+            <p> Low-Priced SPORTSWEAR In High Quality Prodects <br>
+                By Famous Brands Exculusively On SPORTSWEAR</p>
+            <a href="#" class="text-btn"> Sale Collection </a>
+        </div>
+
+        <!-- login + registration -->
+        <section class="login">
+            <span class="close-login"> <ion-icon name="close-outline"></ion-icon> </span>
+            {{if .guest}}
+            <!-- login form -->
+            <div class="form-login">
+                <h2>Login</h2>
+                <form>
+                    <span id="spanErrorLogin"></span>
+                    <div class="input-box">
+                        <span class="login-icon"> <ion-icon name="mail"></ion-icon> </span>
+                        <input type="text" id="usernameLogin" onclick="ClearErrorSpan()" required>
+                        <label> Username </label>
+                    </div>
+                    <div class="input-box">
+                        <span class="login-icon"> <ion-icon name="lock-closed"></ion-icon> </span>
+                        <input type="password" id="passwordLogin" onclick="ClearErrorSpan()" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="rememberme">
+                        <label>
+                            <input type="checkbox"> Remember me
+                        </label>
+                        <a> Forgot Password? </a>
+                    </div>
+
+                </form>
+                <button type="submit" class="login-btn" onclick="loginIndex()"> Login </button>
+                <div class="login-register">
+                    <p> Don't have an account? <a class="register-link">Register</a></p>
+                </div>
+            </div>
+            <div class="form-register">
+                <h2 id="registerh2">Registration</h2>
+                <form>
+                    <span id="spanErrorResister"></span>
+                    <div class="input-box">
+                        <span class="login-icon"> <ion-icon name="person"></ion-icon> </span>
+                        <input type="text" id="usernameResister" onclick="ClearErrorSpan()" required>
+                        <label> Username </label>
+                    </div>
+                    <div class="input-box">
+                        <span class="login-icon"> <ion-icon name="mail"></ion-icon> </span>
+                        <input type="email" id="emailResister" onclick="ClearErrorSpan()" required>
+                        <label> Email </label>
+                    </div>
+                    <div class="input-box">
+                        <span class="login-icon"> <ion-icon name="lock-closed"></ion-icon> </span>
+                        <input type="password" id="passwordResister" onclick="ClearErrorSpan()" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="rememberme">
+                        <label>
+                            <input type="checkbox"> I agree to the terms & conditions
+                        </label>
+                    </div>
+                </form>
+                <button type="submit" class="login-btn" onclick="Resister()"> Sign Up </button>
+                <div class="login-register">
+                    <p> Already have an account? <a class="login-link">Login</a></p>
+                </div>
+            </div>
+            {{else}}
+            <!-- register form -->
+            <div class="form-register">
+                <h2>Registration</h2>
+                <form>
+                    <div class="input-box">
+                        <span class="login-icon"> <ion-icon name="person"></ion-icon> </span>
+                        <input type="text" required>
+                        <label> Username </label>
+                    </div>
+                    <div class="input-box">
+                        <span class="login-icon"> <ion-icon name="mail"></ion-icon> </span>
+                        <input type="email" required>
+                        <label> Email </label>
+                    </div>
+                    <div class="input-box">
+                        <span class="login-icon"> <ion-icon name="lock-closed"></ion-icon> </span>
+                        <input type="password" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="rememberme">
+                        <label>
+                            <input type="checkbox"> I agree to the terms & conditions
+                        </label>
+                    </div>
+                </form>
+                <button type="submit" class="login-btn"> Sign Up </button>
+                <div class="login-register">
+                    <p> Already have an account? <a class="login-link">Login</a></p>
+                </div>
+            </div>
+
+            <!-- setting -->
+            <div class="form-setting">
+                <h2>Setting</h2>
+                <div>
+                    <div class="first-name">
+                        <label for="first-name" class="label-default">Name</label>
+                        <input type="text" name="first-name" id="first-name" class="input-default"
+                            placeholder="Name">
+                    </div>
+                    <div class="last-name">
+                        <label for="last-name" class="label-default"> Phone </label>
+                        <input type="text" name="last-name" id="last-name" class="input-default" placeholder="Phone">
+                    </div>
+                    <script>
+                        class apiFecth {
+                            static json(method_, path, callback, stringdata) {
+                                fetch(path, {
+                                    method: method_,
+                                    body: stringdata,
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                }).then(re => re.json()).then((data) => {
+                                    callback(data)
+                                })
+                            }
+                            static Get(path, callback) {
+                                fetch(path, { method: "GET" }).then(re => re.json()).then((data) => { callback(data) })
+                            }
+                            static From(method_, path, callback, stringdata) {
+                                fetch(path, {
+                                    method: method_, body: stringdata, headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                }).then(re => re.json()).then((data) => { callback(data) })
+                            }
+                        }
+                        function getIfonUser() {
+                            apiFecth.Get("/user/username", (data) => {
+                                document.getElementById("first-name").value = data
+                            })
+                            apiFecth.Get("/user/phone", (data) => {
+                                document.getElementById("last-name").value = data
+                            })
+                        }
+                    </script>
+                    <div class="change-password">
+                        <h4 id="pass">Change password<i class='bx bx-chevron-down'></i></h4>
+
+                        <div id="password">
+                            <div class="current-password">
+                                <label for="current-password" class="label-default"> Current password</label>
+                                <input type="password" name="current-password" id="current-password"
+                                    class="input-default" placeholder="current password">
+                            </div>
+                            <div class="new-password">
+                                <label for="new-password" class="label-default"> New password</label>
+                                <input type="text" name="new-password" id="new-password" class="input-default"
+                                    placeholder="new password">
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        // open change password
+                        let pass1 = document.querySelector('#pass');
+                        let password1 = document.querySelector('#password');
+
+                        pass1.onclick = () => {
+                            if (password1.classList[0] == 'active') {
+                                password1.classList.remove('active')
+                            } else {
+                                password1.classList.add('active');
+                            }
+
+                        }
+                    </script>
+
+                    <div class="visa">
+                        <button class="sub-btn" onclick="PostSettings()">
+                            <span>Submit</span>
+                        </button>
+                        <button>
+                            <a href="/user/settingvais" target="_blank">Visa</a>
+                        </button>
+
+                        <a onclick="logoutUser()"><i class='bx bxs-log-out'></i></a>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </section>
+
+
+    </section>
+
+
+
+    <!-- contact -->
+    <section class="contact">
+        <div class="main-contact">
+            <h3>Sportswear Store</h3>
+            <h5>Here To Contact With Us</h5>
+            <div class="contact-icons">
+                <a target="_blank" title="Facebook" href="https://www.facebook.com"> <i
+                        class='bx bxl-facebook-square'></i> </a>
+                <a target="_blank" title="Instagram" href="https://www.instagram.com"> <i
+                        class='bx bxl-instagram-alt'></i> </a>
+                <a target="_blank" title="Discord" href="https://www.discord.com"> <i class='bx bxl-discord'></i> </a>
+            </div>
+        </div>
+        <div class="main-contact" id="main-contact">
+            <h3> Explore The Store </h3>
+        </div>
+        <div class="main-contact">
+            <h3> Our Services </h3>
+            <li> <a href="#">Gift Cards</a> </li>
+            <li> <a href="#">Hot Sales</a></li>
+            <li> <a href="#">Free Shipping</a> </li>
+        </div>
+        <div class="main-contact">
+            <h3 id="payment-head"> Payment </h3>
+            <div class="payment-icons">
+                <a title="PayPal" href="#"> <i class='bx bxl-paypal'></i> </a>
+                <a title="Visa-Card" href="#"> <i class='bx bxl-visa'></i> </a>
+                <a title="Mastercard" href="#"> <i class='bx bxl-mastercard'></i> </a>
+                <a title="Credit-Card" href="#"> <i class='bx bx-credit-card'></i> </a>
+            </div>
+        </div>
+
+    </section>
+
+    <div class="last-text">
+        <p>
+            Copyright © 2023 All right reserved |
+            This is made by Elias Musharbash
+        </p>
+    </div>
+
+    <!-- scroll to top -->
+    <a href="#" class="home-top"> <i class='bx bx-up-arrow-alt'></i> </a>
+
+
+    <script src="js/interface.js"></script>
+    <script>
+        function Resister() {
+            const username = document.getElementById("usernameResister").value
+            const email = document.getElementById("emailResister").value
+            const password = document.getElementById("passwordResister").value
+            fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: `{"username":"${username}","password":"${password}","email":"${email}"}`,
+            }).then(Response => Response.json()).then(data => {
+                if (data != "create") {
+                    document.getElementById("spanErrorResister").innerText = data
+                } else {
+                    window.location.reload()
+                }
+
+            })
+        }
+
+    </script>
+
+    <script src="js/index.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,175 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    scroll-behavior: smooth;
+    list-style: none;
+}
+:root{
+    --bg-color: #ffffff;
+    --text-color: hsl(0, 0%, 7%);
+    --main-color: #c8815f;
+    --h2-font: 3.3rem;
+    --h3-font: 2rem;
+    --normal-font: 1rem;
+}
+body{
+    background: linear-gradient(rgba(230, 218, 218, 0.652), #5f93c8b8);
+    height: 100vh;
+    font-family: system-ui;
+}
+header{
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    padding: 20px 14%;
+    transition: all .35s ease;
+}
+.logo{
+    font-size: 50px;
+    font-weight: 599;
+    letter-spacing: 6px;
+    color: #c8805f;
+    font-family: 'Akronim';
+    font-style: italic;
+    text-shadow: rgba(214, 161, 14, 0.899)3px 3px 2px , rgba(188, 166, 19, 0.988) -3px -3px 2px;
+}
+.navlist{
+    display: flex;
+}
+.navlist a{
+    color: black;
+    font-weight: 600;
+    padding: 10px 25px;
+    font-size: 1.2rem;
+    transition: all .36s ease;
+}
+.navlist a:hover{
+    color: var(--main-color);
+    font-size: 1.4rem;
+}
+.men-text{
+    font-family: 'italic';
+    font-size: 50px;
+    color: var(--text-color);
+    margin-right: 375px;
+    letter-spacing: 4px;
+}
+
+.selections{
+    text-align: center;
+    z-index: 1;
+}
+.selections:hover li a{
+    opacity: 0;
+}
+.selections li{
+    list-style: none;
+    margin: 16px 0;
+}
+.selections li a{
+    color: white;
+    text-decoration: none;
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: 3.7px;
+    background: #c8805f;
+    padding: 6px 15px;
+    border-radius: 40px;
+    display: block;
+    border: 2px solid transparent;
+    transition: .5s;
+    box-shadow: 0 0 12px #c8815f;
+}
+.selections li a:hover{
+    transform: scale(1.4);
+    background-color: transparent;
+    border-color: #c8815f;
+    border-width: 4px;
+    color: #c8815f;
+    font-weight: 690;
+    opacity: 1;
+}
+.selections li::after{
+    content: attr(data-text);
+    color: white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 120px);
+    font-size: 85px;
+    font-weight: 900;
+    text-transform: uppercase;
+    opacity: 0;
+    letter-spacing: 50px;
+    transition: .5s;
+    pointer-events: none;
+}
+.selections li:hover:after{
+    opacity: .5;
+    letter-spacing: 7px;
+}
+.shirt:hover::before{
+    opacity: .4;
+    transform: translate(200px, 140px);
+}
+.pants:hover::before{
+    opacity: .5;
+    transform: translate(150px, 140px);
+}
+.shoes:hover::before{
+    opacity: .42;
+    transform: translate(220px, 188px);
+}
+.slider{
+    position: absolute;
+    bottom: 40px;
+    left: 25%;
+    font-weight: 600;
+    color: #000;
+    width: 50%;
+    height: 2rem;
+    scale: 1.4;
+    overflow: hidden;
+}
+.slider ul{
+    padding: .5rem 0;
+    display: flex;
+    width: max-content;
+    animation: runSlider 9s linear infinite;
+}
+.slider li{
+    letter-spacing: 1px;
+    font-family: monospace;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-right: 5px;
+}
+@keyframes runSlider{
+    from{ transform: translateX(-765px);}
+    to{ transform: translateX(0);}
+}
+
+
+/* responsive */
+@media (max-width: 620px){
+    .navlist{
+        flex-direction: column;
+        text-align: center;
+        margin: 0 24px;
+    }
+    .pic{
+        scale: 0;
+    }
+}
+
+
+
+

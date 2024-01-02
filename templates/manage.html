@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Manage</title>
+</head>
+
+<body>
+
+    <header>
+        <p class="logo"> SS </p>
+
+        <div class="title">
+            <h1>Sportswear <br>Store</h1>
+        </div>
+    </header>
+
+    <!-- manager section -->
+    <section class="manager-section">
+        <!--container + kind-->
+        <section class="main-section">
+            <h2 class="header">Main pages management</h2>
+
+            <div class="main">
+                <div class="add-del">
+                    <h3>Editing pages</h3>
+                    <div>
+                        <label for="container" class="label-default"> Container</label>
+                        <input type="text" name="container" id="inputContainer" class="input-default"
+                            placeholder="Container name" onclick="enablekind()" onchange="enablekind()" required>
+                        <i class='bx bx-plus-circle' onclick="addContainer()"></i>
+                        <i class='bx bx-trash' onclick="deleteContainer()"></i>
+                    </div>
+                    <div>
+                        <label for="kind" class="label-default"> Kind</label>
+                        <input type="text" name="kind" id="inputKind" class="input-default" placeholder="Kind name"
+                            disabled="true" onclick="enablekind()" onblur="getDataOfModels(this)">
+                        <i class='bx bx-plus-circle' onclick="addKind()"></i>
+                        <i class='bx bx-trash' onclick="deleteKind()"></i>
+                    </div>
+                </div>
+                <div class="main-view">
+                    <h3>Currently pages</h3>
+                    <div class="view-list">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- products things -->
+        <h2 class="header">Products management</h2>
+
+        <div class="products">
+
+            <div class="colomn-items">
+                <div>
+                    <label for="product-id" class="label-default">Product ID</label><br>
+                    <select name="product-id" id="product-id" onchange="filData(this)" disabled="true">
+                        <option value="0">Select id</option>
+                    </select>
+                    <i class='bx bx-trash' onclick='deleteModel(document.getElementById("product-id").value)'></i>
+                </div>
+                <div class="product-name"> <!--describtion-->
+                    <label for="product-name" class="label-default">Product name</label><br>
+                    <input type="text" name="product-name" id="product-name" class="input-default"
+                        placeholder="Product name" disabled="true">
+                </div>
+                <div class="price">
+                    <label for="price" class="label-default">Price</label><br>
+                    <input type="number" name="price" min="0.1" id="price" class="input-default" min="1"
+                        placeholder="Price value" disabled="true">
+                </div>
+                <div class="discount">
+                    <label for="discount" class="label-default">Discount</label><br>
+                    <input type="text" name="discount" id="discount" class="input-default" placeholder="Discount Value"
+                        disabled="true" min="0">
+                </div>
+            </div>
+
+            <div class="image-box">
+                <div class="add-image">
+                    <label for="image" class="label-default">Image</label><br>
+                    <input type="text" name="image" id="image" class="input-default" placeholder="Image URL"
+                        disabled="true">
+                    <!-- <i class='bx bx-plus-circle'></i>
+                    <i class='bx bx-trash'></i> -->
+                </div>
+                <!-- <div class="delete-image">
+                    <select name="image-url" id="image-url">
+                        <option value="0">Select URL</option>
+                        <option value="image1">https://www.sportsdirect.com/images/imgzoom/51/51199003_xxl.jpg</option>
+                    </select>
+                    <i class='bx bx-trash'></i>
+                </div> -->
+            </div>
+
+            <div class="details">
+                <div class="add-details">
+                    <label for="size" class="label-default">details</label><br>
+                    <input type="text" disabled="true" name="size" id="size" class="input-default" placeholder="Size"> /
+                    <input type="text" disabled="true" name="color" id="color" class="input-default"
+                        placeholder="Color"> /
+                    <input type="number" min="1" disabled="true" name="quantity" id="quantity" class="input-default"
+                        placeholder="Quantity">
+                    <i class='bx bx-plus-circle' onclick='addSize(
+                        document.getElementById("size").value,
+                        document.getElementById("color").value, 
+                        document.getElementById("quantity").value 
+                    )'></i>
+                </div>
+                <div class="flex1">
+                    <div class="delete-details">
+                        <select name="details-info" id="details-info" disabled="true" onchange="fillSizeColorQty(this)">
+                            <option value="0">Select details info</option>
+                        </select>
+                        <i class='bx bx-trash' onclick='deleteSize(document.getElementById("details-info"))'></i>
+                    </div>
+                    <button id="submit" disabled="true" onclick="toServerSend()">submit</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        var moduleListOfKind = new Map()
+        var listKindAndContainerMain = new Map()
+        function enablekind() {
+            if (document.getElementById("inputContainer").value.length != 0) {
+                document.getElementById("inputKind").disabled = false
+            } else {
+                document.getElementById("inputKind").disabled = true
+            }
+        }
+        function addContainer() {
+            fetch("/admins/product/container", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `Container=${document.getElementById("inputContainer").value}`,
+            }).then(Response => Response.text()).then(data => {
+                alert(JSON.parse(data))
+                if (JSON.parse(data) == "Created") {
+                    window.location.reload()
+                }
+            })
+        }
+        function deleteContainer() {
+            fetch("/admins/product/container", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `${document.getElementById("inputContainer").value}`,
+            }).then(Response => Response.text()).then(data => {
+                alert(JSON.parse(data))
+                if (JSON.parse(data) == "delete") {
+                    window.location.reload()
+                }
+            })
+        }
+        function addKind() {
+            let toServer = {
+                "container": `${document.getElementById("inputContainer").value}`,
+                "kind": `${document.getElementById("inputKind").value}`
+            }
+            fetch("/admins/product/kind", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(toServer),
+            }).then(Response => Response.text()).then(data => {
+                alert(JSON.parse(data))
+                if (JSON.parse(data) == "Created") {
+                    window.location.reload()
+                }
+            })
+        }
+        function deleteKind() {
+            let toServer = {
+                "container": `${document.getElementById("inputContainer").value}`,
+                "kind": `${document.getElementById("inputKind").value}`
+            }
+            fetch("/admins/product/kind", {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(toServer),
+            }).then(Response => Response.text()).then(data => {
+                alert(JSON.parse(data))
+                if (JSON.parse(data) == "delete") {
+                    window.location.reload()
+                }
+            })
+        }
+
+        class listKindAndContainer {
+            constructor(name, array) {
+                this.container = name
+                this.Element = document.createElement("div")
+                this.Element.classList.add("show-list")
+                this.kindArray = ""
+                array.forEach((element, index) => {
+                    if (index == array.length - 1) {
+                        this.kindArray += `<span>${element}</span>`
+                    } else {
+                        this.kindArray += `<span>${element}</span> / `
+                    }
+                })
+                this.Element.innerHTML = ` 
+                                <div>${this.container}<i id="openkinds" class='bx bx-chevron-right'></i></div>
+                                     <div class="kind-list">${this.kindArray}</div>`
+
+                let openkinds = this.Element.querySelector('#openkinds');
+                let kindList = this.Element.querySelector('.kind-list');
+                openkinds.onclick = () => {
+                    kindList.classList.toggle('active')
+
+                }
+                document.querySelector(".view-list").appendChild(this.Element)
+            }
+        }
+        fetch("/AllContainerAndKind", {
+            method: "GET"
+        }).then(res => res.json()).then(data => {
+            var list = Object.getOwnPropertyNames(data);
+            list.forEach((element) => {
+                let d = new listKindAndContainer(element, data[`${element}`])
+                listKindAndContainerMain[element] = data[`${element}`]
+            });
+        })
+
+
+
+        function getDataOfModels(Element) {
+
+            let isExitedKind = false
+            if (listKindAndContainerMain[`${document.getElementById("inputContainer").value}`] != undefined) {
+                listKindAndContainerMain[`${document.getElementById("inputContainer").value}`].forEach(element => {
+                    if (element == Element.value) {
+                        isExitedKind = true
+                    }
+                })
+                if (isExitedKind) {
+                    disabledProducts(false)
+                    document.getElementById("product-id").innerHTML = `<option value="0">Select id</option>`
+                    let toServer = {
+                        "container": `${document.getElementById("inputContainer").value}`,
+                        "kind": `${document.getElementById("inputKind").value}`
+                    }
+                    fetch("/admins/product/model", {
+                        method: "PUT",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(toServer),
+                    }).then(Response => Response.json()).then(data => {
+                        if (data.err != undefined) {
+                            document.getElementById("product-id").innerHTML = `<option value="0">NO DATA</option>`
+                        } else {
+                            data.forEach(element => {
+                                moduleListOfKind[`${element.id}`] = element
+                                document.getElementById("product-id").innerHTML += `<option value="${element.id}">${element.id}</option>`
+                            })
+                        }
+                    })
+
+                } else {
+                    disabledProducts(true)
+                    document.getElementById("product-id").innerHTML = `<option value="0">Select id</option>`
+                }
+            } else {
+                disabledProducts(true)
+                document.getElementById("product-id").innerHTML = `<option value="0">Select id</option>`
+            }
+        }
+
+        function disabledProducts(bool) {
+            document.getElementById("quantity").disabled = bool
+            document.getElementById("image").disabled = bool
+            document.getElementById("discount").disabled = bool
+            document.getElementById("price").disabled = bool
+            document.getElementById("product-name").disabled = bool
+            document.getElementById("product-id").disabled = bool
+            document.getElementById("size").disabled = bool
+            document.getElementById("color").disabled = bool
+            document.getElementById("details-info").disabled = bool
+            document.getElementById("submit").disabled = bool
+
+        }
+
+        function filData(id) {
+            let model = moduleListOfKind[id.value]
+            document.getElementById("details-info").innerHTML = `
+             <option value="0">Select details info</option>
+            `
+            if (model == undefined) {
+                document.getElementById("quantity").value = ""
+                document.getElementById("size").value = ""
+                document.getElementById("color").value = ""
+                document.getElementById("discount").value = ""
+                document.getElementById("price").value = ""
+                document.getElementById("product-name").value = ""
+                document.getElementById("image").value = ""
+                return
+            }
+            document.getElementById("discount").value = model.discount
+            document.getElementById("price").value = model.price
+            document.getElementById("product-name").value = model.description
+            document.getElementById("image").value = model.linkesImage[0]
+
+            document.getElementById("quantity").value = ""
+            document.getElementById("size").value = ""
+            document.getElementById("color").value = ""
+            var list = Object.getOwnPropertyNames(model.sizes);
+            list.forEach((element) => {
+                let size = element
+                let color = ""
+                let qty = ""
+                var colorin = Object.getOwnPropertyNames(model.sizes[element]);
+                colorin.forEach((incolor) => {
+                    color = incolor
+                    qty = (model.sizes[element][incolor])
+                    document.getElementById("details-info").innerHTML += `<option id="${size}-${color}-${qty}" value="${size}/${color}/${qty}">${size} / ${color} / ${qty}</option>`
+
+                });
+            });
+
+
+        }
+        function fillSizeColorQty(op) {
+            if (op.value == 0) {
+                document.getElementById("quantity").value = ""
+                document.getElementById("size").value = ""
+                document.getElementById("color").value = ""
+            } else {
+                let list = String(op.value).split("/")
+                document.getElementById("quantity").value = list[2]
+                document.getElementById("size").value = list[0]
+                document.getElementById("color").value = list[1]
+            }
+
+        }
+
+        function deleteModel(id) {
+            let toServer = {
+                "container": `${document.getElementById("inputContainer").value}`,
+                "kind": `${document.getElementById("inputKind").value}`,
+                "id": Number(id)
+            }
+            fetch("/admins/product/model", {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(toServer),
+            }).then(Response => Response.text()).then(data => {
+                alert("Product ID" + JSON.parse(data))
+                if (JSON.parse(data) == id) {
+                    window.location.reload()
+                }
+            })
+        }
+
+        function deleteSize(element) {
+            if (element.value == "0") return
+            let id = String(element.value)
+            for (let i = 0; i < 3; i++) {
+                id = id.replace("/", "-")
+            }
+            element.querySelector("#" + id).remove()
+
+
+        }
+        function addSize(size, color, qty) {
+            element = document.getElementById("details-info")
+
+            let listSize = document.getElementById(`${size}-${color}-${qty}`)
+            if (listSize == null) {
+                for (const e of element.children) {
+                    if (e.tagName != "OPTION" || e.value == "0") continue
+                    let indexOfid = e.id.split("-")
+                    if (indexOfid[0] == size) {
+                        if (indexOfid[1] == color) {
+                            e.id = `${size}-${color}-${qty}`
+                            e.value = `${size}/${color}/${qty}`
+                            e.textContent = `${size} / ${color} / ${qty}`
+                            return
+                        }
+                    }
+                }
+                document.getElementById("details-info").innerHTML += `<option id="${size}-${color}-${qty}" value="${size}/${color}/${qty}">${size} / ${color} / ${qty}</option>`
+            }
+        }
+
+        function toServerSend() {
+            let id = Number(document.getElementById("product-id").value)
+            let sizes = new Map()
+            element = document.getElementById("details-info")
+            for (const e of element.children) {
+                if (e.tagName != "OPTION" || e.value == "0") continue
+                let s = e.id.split('-')
+
+                if (sizes[s[0]] == undefined) {
+                    sizes[s[0]] = {}
+                    sizes[s[0]][s[1]] = Number(s[2])
+                } else {
+                    sizes[s[0]][s[1]] = Number(s[2])
+                }
+            }
+            let toServer = {
+                "id": id,
+                "container": `${document.getElementById("inputContainer").value}`,
+                "kind": `${document.getElementById("inputKind").value}`,
+                "model": {
+                    "sizes": sizes,
+                    "price": Number(document.getElementById("price").value),
+                    "description": String(document.getElementById("product-name").value),
+                    "discount": Number(document.getElementById("discount").value),
+                    "linkesImage": [String(document.getElementById("image").value)]
+                }
+            }
+            if (id == 0) {
+                fetch("/admins/product/model", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(toServer),
+                }).then(Response => Response.text()).then(data => {
+                    alert(JSON.parse(data))
+                    if (JSON.parse(data) == "create") {
+                        window.location.reload()
+                    }
+                })
+
+            } else {
+                fetch("/admins/product/model", {
+                    method: "PATCH",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(toServer),
+                }).then(Response => Response.json()).then(data => {
+                    if (data == "Updata Id") {
+                        alert(data + " " +String(toServer.id))
+                        window.location.reload()
+                    }
+                    alert(data)
+                })
+            }
+
+
+        }
+
+
+    </script>
+    <a href="/admin/"><i id="back-btn" class='bx bx-arrow-back'></i></a>
+</body>
+
+</html>
