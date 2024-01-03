@@ -116,7 +116,6 @@
                     lastid = Number(lastid[lastid.length - 1].id.replace("p", ""))
                     let containerAndKind = window.location.pathname
                     containerAndKind = containerAndKind.replace("/", "").split("/")
-                    console.log(lastid)
                     if (fetchTime) {
                         fetch(`/product?kind=${containerAndKind[1]}&container=${containerAndKind[0]}&id=${lastid -2}`, {
                             method: "GET"
