@@ -105,6 +105,7 @@
         }
 
         let fetchTime = true
+        let id = 0 
         document.addEventListener('DOMContentLoaded', function (e) {
             document.addEventListener('scroll', function (e) {
                 let documentHeight = document.body.scrollHeight;
@@ -112,22 +113,24 @@
                 let modifier = 200;
                 if (currentScroll + modifier > documentHeight) {
                     let lastid = document.getElementById("shop-content").children
-                    lastid = lastid[lastid.length - 1].id.replace("p", "")
+                    lastid = Number(lastid[lastid.length - 1].id.replace("p", ""))
                     let containerAndKind = window.location.pathname
                     containerAndKind = containerAndKind.replace("/", "").split("/")
+                    console.log(lastid)
                     if (fetchTime) {
-                        fetch(`/product?kind=${containerAndKind[1]}&container=${containerAndKind[0]}&id=${lastid+1}`, {
+                        fetch(`/product?kind=${containerAndKind[1]}&container=${containerAndKind[0]}&id=${lastid -2}`, {
                             method: "GET"
                         }).then(re => re.json()).then(data => {
                             if (data != null) {
                                 for (const f of data) {
-                                   new ProductDataBase(f)
+                                    new ProductDataBase(f)
                                 }
+
+                                setTimeout(() => { fetchTime = true }, 100)
+
                             }
                         })
-                        fetchTime = false 
-                    } else {
-                        setTimeout(() => { fetchTime = true }, 100)
+                        fetchTime = false
                     }
                 }
             })
