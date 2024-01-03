@@ -66,65 +66,52 @@ function PostSettings() {
     const phone = document.getElementById("last-name").value
     const oldPassowrd = document.getElementById("current-password").value
     const newpassword = document.getElementById("new-password").value
+    if (firstname.length != 0) {
+        fetch("/user/name", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `Name=${firstname}`,
+        }).then(Response => Response.json()).then(data => {
+            if (data != "update") {
+                alert(data)
+            } else {
+                alert("Name Update")
+            }
 
-    fetch("/user/name", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `Name=${firstname}`,
-    }).then(Response => Response.json()).then(data => {
-        if (data != "update") {
-            alert(data)
-        }
-    })
-
-    fetch("/user/phone", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `phone=${phone}`,
-    }).then(Response => Response.json()).then(data => {
-        if (data != "update") {
-            alert(data)
-        }
-    })
+        })
+    }
+    if (phone.length != 0) {
+        fetch("/user/phone", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `phone=${phone}`,
+        }).then(Response => Response.json()).then(data => {
+            if (data != "update") {
+                alert(data)
+            } else {
+                alert("Phone Update")
+            }
+        })
+    }
     if (oldPassowrd.length == 0 || newpassword.length == 0) return
     fetch("/user/password", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: `{"oldPassowrd":"${oldPassowrd}","newpassword":"${newpassword}"}`,
+        body: `{"oldPassowrd":"${oldPassowrd}","newPassowrd":"${newpassword}"}`,
     }).then(Response => Response.json()).then(data => {
         if (data != "update") {
             alert(data)
+        } else {
+
+            alert("Passowrd Update")
         }
     })
 }
 
 
-function postcomment() {
-
-    const commentData = {
-        comment: "dawsasd",
-        stars: 2,
-        container: "newContainer",
-        kind: "short",
-        idmodel: 1
-    };
-
-    fetch("/user/commint", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(commentData),
-    })
-        .then(response => response.json())
-        .then(result => {
-            // Handle the response result
-            console.log(result);
-        })
-}

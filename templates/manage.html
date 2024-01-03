@@ -136,7 +136,7 @@
             }
         }
         function addContainer() {
-            fetch("/admins/product/container", {
+            fetch("/admin/product/container", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -150,7 +150,7 @@
             })
         }
         function deleteContainer() {
-            fetch("/admins/product/container", {
+            fetch("/admin/product/container", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -168,7 +168,7 @@
                 "container": `${document.getElementById("inputContainer").value}`,
                 "kind": `${document.getElementById("inputKind").value}`
             }
-            fetch("/admins/product/kind", {
+            fetch("/admin/product/kind", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -186,7 +186,7 @@
                 "container": `${document.getElementById("inputContainer").value}`,
                 "kind": `${document.getElementById("inputKind").value}`
             }
-            fetch("/admins/product/kind", {
+            fetch("/admin/product/kind", {
                 method: "DELETE",
                 headers: {
                     'Content-Type': 'application/json'
@@ -254,7 +254,7 @@
                         "container": `${document.getElementById("inputContainer").value}`,
                         "kind": `${document.getElementById("inputKind").value}`
                     }
-                    fetch("/admins/product/model", {
+                    fetch("/admin/product/model", {
                         method: "PUT",
                         headers: {
                             'Content-Type': 'application/json'
@@ -354,7 +354,7 @@
                 "kind": `${document.getElementById("inputKind").value}`,
                 "id": Number(id)
             }
-            fetch("/admins/product/model", {
+            fetch("/admin/product/model", {
                 method: "DELETE",
                 headers: {
                     'Content-Type': 'application/json'
@@ -427,7 +427,7 @@
                 }
             }
             if (id == 0) {
-                fetch("/admins/product/model", {
+                fetch("/admin/product/model", {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
@@ -441,7 +441,7 @@
                 })
 
             } else {
-                fetch("/admins/product/model", {
+                fetch("/admin/product/model", {
                     method: "PATCH",
                     headers: {
                         'Content-Type': 'application/json'

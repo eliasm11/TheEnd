@@ -25,9 +25,9 @@ var (
 	ErrUserAddrStreet = errors.New("Street is Invalid")
 	ErrUserAddrArea   = errors.New("Area is Invalid")
 
-	ErrUservisaInvalidNumber         = errors.New("Number is Invalid")
-	ErrUservisaInvalidCvv            = errors.New("Cvv is Invalid")
-	ErrUservisaInvalidExpirationDate = errors.New("ExpirationDate is Invalid")
+	ErrUservisaInvalidNumber         = errors.New("Visa Number is Invalid")
+	ErrUservisaInvalidCvv            = errors.New("Visa Cvv is Invalid")
+	ErrUservisaInvalidExpirationDate = errors.New("Visa ExpirationDate is Invalid")
 	ErrUservisaNumberIsExit          = errors.New("visa Number Is Exit")
 	ErrUservisaIsExit                = errors.New("visa  Already added")
 	ErrUserPhoneNumberInvalid        = errors.New("is NOT a valid phone number")

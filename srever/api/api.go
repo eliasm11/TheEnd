@@ -7,6 +7,8 @@ import (
 	"strings"
 	"structs"
 
+	"net/smtp"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -78,7 +80,6 @@ func (api *Api) setAdminApi(server *gin.Engine) {
 			ctx.Abort()
 			return
 		}
-
 
 	})
 	api.admin.setOrderApi()
@@ -176,13 +177,12 @@ func (api *Api) setGuestApi(server *gin.Engine) {
 
 	}, gin.WrapH(http.FileServer(http.Dir("public"))))
 	server.GET("/", func(ctx *gin.Context) {
-
 		session := sessions.Default(ctx)
+
 		if session.Get("user") == nil || session.Get("username") == nil {
 			ctx.HTML(http.StatusOK, "index.html", gin.H{"guest": true})
 			return
 		}
-
 		ctx.HTML(http.StatusOK, "index.html", gin.H{"guest": false})
 	})
 
@@ -218,6 +218,9 @@ func (api *Api) setGuestApi(server *gin.Engine) {
 	})
 
 	server.POST("/register", func(ctx *gin.Context) {
+
+		session := sessions.Default(ctx)
+		session.Clear()
 		type User1 struct {
 			Username string `json:"username"`
 			Password string `json:"password"`
@@ -240,8 +243,8 @@ func (api *Api) setGuestApi(server *gin.Engine) {
 			return
 		}
 
-		session := sessions.Default(ctx)
 		session.Set("user", newuser.Username+","+newuser.Password)
+		session.Set("username" , newuser.Username)
 		session.Save()
 
 		ctx.JSON(http.StatusOK, "create")
@@ -260,5 +263,35 @@ func (api *Api) setGuestApi(server *gin.Engine) {
 
 		ctx.JSON(http.StatusOK, "ok")
 	})
+	server.GET("/forgetpassword", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "forgetpassword.html", nil)
+	})
 
+	server.POST("/forgetpassword", func(ctx *gin.Context) {
+		user := structs.User{}
+		username := ctx.PostForm("username")
+		if err := db.MainDB.Users.GetUser(username, &user); err != nil {
+			ctx.HTML(http.StatusOK, "forgetpassword.html", err.Error())
+			return
+		}
+		if err := sendMsg(user.Password, user.UserEmail); err != nil {
+			ctx.HTML(http.StatusOK, "forgetpassword.html", "Try in other Time")
+			return
+		}
+		ctx.HTML(http.StatusOK, "forgetpassword.html", "Check your Email")
+	})
+}
+
+func sendMsg(body, email string) error {
+	from := "spprtswearstore@gmail.com"
+	pass := "qgkv evar klku nspo "
+
+	msg := "From: " + from + "\n" +
+		"To: " + email + "\n" +
+		"Subject: Your Password\n\n" +
+		body
+
+	err := smtp.SendMail("smtp.gmail.com:587", smtp.PlainAuth("", from, pass, "smtp.gmail.com"), from, []string{email}, []byte(msg))
+
+	return err
 }

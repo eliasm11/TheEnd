@@ -101,6 +101,10 @@ func (user *user) setInformationApi() {
 			ctx.JSON(http.StatusOK, err.Error())
 			return
 		}
+		if len(user.UserVisa.Number) < 16 {
+			ctx.JSON(http.StatusOK, "")
+			return
+		}
 		visa := user.UserVisa.Number[:3] + strings.Repeat("*", 10) + user.UserVisa.Number[13:]
 		ctx.JSON(http.StatusOK, visa)
 	})
@@ -146,7 +150,9 @@ func (user *user) setInformationApi() {
 	user.userGroup.POST("/name", func(ctx *gin.Context) {
 
 		username := sessions.Default(ctx).Get("username").(string)
+
 		Name := ctx.PostForm("Name")
+
 		if err := db.MainDB.Users.UpdateName(username, Name); err != nil {
 			ctx.JSON(http.StatusOK, err.Error())
 			return
@@ -172,6 +178,9 @@ func (user *user) setInformationApi() {
 			ctx.JSON(http.StatusOK, err.Error())
 			return
 		}
+		s := sessions.Default(ctx)
+		s.Delete("user")
+		s.Save()
 
 		ctx.JSON(http.StatusOK, "update")
 
@@ -182,7 +191,7 @@ func (user *user) setInformationApi() {
 func (user *user) setLogoutApi() {
 	user.userGroup.GET("/logout", func(ctx *gin.Context) {
 		session := sessions.Default(ctx)
-		session.Set("user", nil)
+		session.Clear()
 		session.Save()
 
 	})
@@ -204,7 +213,6 @@ func (user *user) setCommintApi() {
 			ctx.JSON(http.StatusOK, "check json")
 			return
 		}
-
 
 		username := sessions.Default(ctx).Get("username").(string)
 

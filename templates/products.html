@@ -275,9 +275,16 @@
         }
 
 
+        function getCookieValue(name) {
+            const regex = new RegExp(`(^| )${name}=([^;]+)`)
+            const match = document.cookie.match(regex)
+            if (match) {
+                return match[2]
+            }
+        }
 
-        if (getCoookie("cart").length != 0) {
-            let cookieCart = JSON.parse(getCoookie("cart"))
+        if (getCookieValue("cart") != undefined) {
+            let cookieCart = JSON.parse(getCookieValue("cart"))
             let cart = document.getElementById("cart-contant")
             for (const cartC in cookieCart) {
                 let NewArry = [];
@@ -287,6 +294,7 @@
                 Order[cartC] = NewArry;
 
             }
+
         }
 
 
