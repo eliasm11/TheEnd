@@ -19,33 +19,39 @@
         </div>
     </header>
 
-    <!-- login form -->
-    <div class="form-login" id="login">
-        <h2>administrator Login</h2>
-        <div>
-            <div class="input-box">
-                <label for="username"> username </label>
-                <input id="username" type="text" required>
-                <i class='bx bxs-envelope'></i>
-            </div>
-            <div class="input-box">
-                <label for="password">Password</label>
-                <input id="password" type="password" required>
-                <i class='bx bxs-lock-alt'></i>
-            </div>
-            <div class="rememberme">
-                <label>
-                    <input type="checkbox"> Remember me
-                </label>
-                <input type="reset" value="Clear">
+        <!-- login form -->
+        <div class="home-page">
+            <div class="trick-box">
+                <div class="trick">
+                    <h2>Administrator Login</h2>
+                    <div class="form-login">
+                        <div>
+                            <div class="input-box">
+                                <label for="username"> username </label>
+                                <input id="username" type="text" required>
+                                <i class='bx bxs-envelope' ></i>
+                            </div>
+                            <div class="input-box">
+                                <label for="password">Password</label>
+                                <input id="password" type="password" required>
+                                <i class='bx bxs-lock-alt' ></i>
+                            </div>
+                            <div class="rememberme">
+                                <label>
+                                    <input type="checkbox"> Remember me
+                                </label>
+                                <input type="reset" value="Clear">
+                            </div>
+                            <div class="btn">
+                                <button onclick="login()"> <i class='bx bx-log-in'></i>Login </button>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div>
-            <button onclick="login()"> Login </button>
-        </div>
-    </div>
-    <script>
-        class apiFecth {
+        <script>
+ class apiFecth {
             static json(method_, path, callback, stringdata) {
                 fetch(path, {
                     method: method_,
@@ -82,7 +88,7 @@
             }, `username=${admin.username}&password=${admin.password}`)
 
         }
-    </script>
+        </script>
 </body>
 
 </html>

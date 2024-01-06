@@ -4,32 +4,88 @@
 <head>
     <title>Login Check</title>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
 </head>
 
 <body>
-    <div class="main">
-        <input type="checkbox" id="chk" aria-hidden="true">
 
-        <div class="signup">
-            <form>
-                <label for="chk" aria-hidden="true">Sign up</label>
-                <input type="text" id="usernameResister" name="txt" placeholder="User name" required="">
-                <input type="email" id="emailResister" name="email" placeholder="Email" required="">
-                <input type="password" id="passwordResister" placeholder="Password" required="">
-            </form>
-            <button id="signup-btn" onclick="Resister()">Sign up</button>
-        </div>
+    <header>
+        <h1>
+            <div>
+                <p class="logo"> SS </p>
+            </div>
 
-        <div class="login">
-            <form>
-                <label for="chk" aria-hidden="true">Login</label>
-                <input type="text" id="usernameLogin" placeholder="User name" required="">
-                <input type="password" id="passwordLogin" placeholder="Password" required="">
-            </form>
-            <button id="login-btn" onclick="login()">Login</button>
+            <div class="header-title">
+                Sportswear <br>
+                Store <br>
+                <i class='bx bxs-heart'></i>
+            </div>
+        </h1>
+    </header>
+    <style>
+        header{
+    position: absolute;
+    width: 100%;
+}
+h1{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15%;
+    max-width: 1100px;
+}
+.logo{
+    font-size: 50px;
+    font-weight: 599;
+    letter-spacing: 6px;
+    color: #c8805f;
+    font-family: 'Akronim';
+    font-style: italic;
+    text-shadow: rgba(214, 161, 14, 0.899)3px 3px 2px , rgba(188, 166, 19, 0.988) -3px -3px 2px;
+}
+.header-title{
+    text-align: center;
+    font-size: 38px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: #fff;
+}
+.header-title i{
+    display: block;
+    font-size: 2.25rem;
+    color: #eee;
+    text-shadow: 0 0 15px #fff;
+}
+    </style>
+
+    <div class="home-page">
+        <div class="main">
+            <input type="checkbox" id="chk" aria-hidden="true">
+    
+            <div class="signup">
+                <form>
+                    <label for="chk" aria-hidden="true">Sign up</label>
+                    <input type="text" id="usernameResister" name="txt" placeholder="User name" required="">
+                    <input type="email" id="emailResister" name="email" placeholder="Email" required="">
+                    <input type="password" id="passwordResister" placeholder="Password" required="">
+                </form>
+                <button id="signup-btn" onclick="Resister()">Sign up</button>
+            </div>
+    
+            <div class="login">
+                <form>
+                    <label for="chk" aria-hidden="true">Login<i class='bx bx-log-in-circle'></i></label>
+                    <input type="text" id="usernameLogin" placeholder="User name" required="">
+                    <input type="password" id="passwordLogin" placeholder="Password" required="">
+                </form>
+                <button id="login-btn" onclick="login()">Login</button>
+            </div>
+            <span id="spanErrorLogin"></span>
         </div>
-        <span id="spanErrorLogin"></span>
     </div>
+
+
 
     <script>
         function Resister() {
@@ -44,9 +100,9 @@
                 body: `{"username":"${username}","password":"${password}","email":"${email}"}`,
             }).then(Response => Response.json()).then(data => {
                 if (data !== "create") {
-                    document.getElementById("spanErrorResister").innerText = data
+                    alert(data)
                 } else {
-                    window.location = "/"
+                    window.location.reload()
                 }
 
             }
@@ -64,7 +120,7 @@
             }).then(Response => Response.json()).then(data => {
                 console.log(data)
                 if (data != "ok") {
-                    document.getElementById("spanErrorLogin").innerText = data
+                    alert(data)
                 } else {
                     window.location.reload()
                 }
@@ -75,13 +131,13 @@
 
 
     <style>
-        body {
+        .home-page {
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 95.2dvh;
             font-family: 'Jost', sans-serif;
             background: linear-gradient(to top, #79442c, #c8815f, #ecc3af);
         }
@@ -92,6 +148,8 @@
             overflow: hidden;
             border-radius: 10px;
             box-shadow: 5px 20px 50px #000;
+            background: linear-gradient(to top, #79442c, #c8815f, #ecc3af);
+            z-index: 1000;
         }
 
         #chk {
@@ -105,10 +163,11 @@
         }
 
         label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: #fff;
             font-size: 2.3em;
-            justify-content: center;
-            display: flex;
             margin: 60px;
             font-weight: bold;
             cursor: pointer;
@@ -125,7 +184,7 @@
             padding: 10px;
             border: none;
             outline: none;
-            border-radius: 5px;
+            border-radius: 25px;
         }
 
         #signup-btn{
