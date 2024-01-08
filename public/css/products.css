@@ -275,6 +275,11 @@ header {
     margin-bottom: 2px;
 }
 
+.flex-details{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 .price-cart {
     display: flex;
     align-items: center;
