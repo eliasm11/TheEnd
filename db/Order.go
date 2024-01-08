@@ -19,13 +19,6 @@ var (
 	ErrOrdersType      = errors.New("Type is empty")
 	ErrOrderNotFound   = errors.New("Order id not found")
 )
-
-/*
-Id        uint   `json:"id"`
-IdModel   int    `json:"idModel"`
-Color     string `json:"color"`
-SizeName  string `json:"size"`
-*/
 type UserOrder struct {
 	Username  string `json:"username"`
 	UserAddr  string `json:"addr"`
@@ -122,8 +115,6 @@ func (o *order) Add(order *Orders) error {
 		} else {
 			oldOlder := Orders{}
 			json.Unmarshal(data, &oldOlder)
-			fmt.Println("befor\n", oldOlder)
-
 			for keyContainer, kind := range order.Item {
 				if _, ok := oldOlder.Item[keyContainer]; ok == false {
 					oldOlder.Item[keyContainer] = order.Item[keyContainer]
@@ -159,7 +150,6 @@ func (o *order) Add(order *Orders) error {
 			}
 
 			data, err := json.Marshal(&oldOlder)
-			fmt.Println("after\n", oldOlder)
 			if err != nil {
 				return err
 			}
@@ -212,37 +202,3 @@ func itob(v int) []byte {
 	return b
 }
 
-/*
-
-	for keyContainer, kind := range o.Item {
-		if _, ok := o.Item[keyContainer]; ok == false {
-			o.Item[keyContainer] = order.Item[keyContainer]
-		} else {
-			for keyKind, id := range kind {
-				if _, ok := o.Item[keyContainer][keyKind]; ok == false {
-					o.Item[keyContainer][keyKind] = order.Item[keyContainer][keyKind]
-				} else {
-					for keyId, size := range id {
-						if _, ok := o.Item[keyContainer][keyKind][keyId]; ok == false {
-							o.Item[keyContainer][keyKind][keyId] = order.Item[keyContainer][keyKind][keyId]
-						} else {
-							for keySize, color := range size {
-								if _, ok := o.Item[keyContainer][keyKind][keyId][keySize]; ok == false {
-									o.Item[keyContainer][keyKind][keyId][keySize] = order.Item[keyContainer][keyKind][keyId][keySize]
-								} else {
-									for KeyColor := range color {
-										if _, ok := o.Item[keyContainer][keyKind][keyId][keySize][KeyColor]; ok == false {
-											o.Item[keyContainer][keyKind][keyId][keySize][KeyColor] = order.Item[keyContainer][keyKind][keyId][keySize][KeyColor]
-										} else {
-											o.Item[keyContainer][keyKind][keyId][keySize][KeyColor]++
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-*/
