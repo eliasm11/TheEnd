@@ -12,6 +12,7 @@
 
 <body>
     <header>
+       
         <p class="logo"> SS </p>
 
         <div class="title">
@@ -21,57 +22,70 @@
 
     <!-- orders container -->
     <section class="order-section">
+        <div class="orders">
+            <h2 class="order-header " id="listofOdera"> Oreders <i class='bx bxs-chevron-down'></i> <input type="date"
+                    id="date" onchange="getOrders()" /> </h2>
+        </div>
         <div class="orders" id="listOforders">
-            <h2 class="order-header" id="listofOder"> Oreders <i class='bx bxs-chevron-down'></i> </h2>
+
         </div>
     </section>
     <script>
-        fetch("/admin/order", {
-            method: "POST",
-        }).then(Response => Response.json()).then(data => {
-            if (typeof data == "string") {
-                alert("no orders")
-                return
-            }
-            data.forEach(s => {
-                let element = JSON.parse(s)
-                let e = document.createElement("ul")
-                e.classList.add("order")
-                e.innerHTML = `
+
+        if (document.getElementById("date").value != "") {
+            getOrders()
+        }
+        function test(){
+            console.log("fsdfdsfs")
+        }
+        function getOrders() {
+            document.getElementById("listOforders").innerHTML = ""
+            let date = document.getElementById("date").value.split("-")
+            date[1] = date[1].replace("0", "")
+            date[2] = date[2].replace("0", "")
+            date = date[0] + "-" + date[1] + "-" + date[2]
+ 
+            fetch("/admin/order", {
+                method: "POST",
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                body: `date=${date}`
+            }).then(Response => Response.json()).then(data => {
+            
+                if (typeof data == "string") {
+                    alert("no orders")
+                    return
+                }
+                data.forEach(s => {
+                    let element = JSON.parse(s)
+                    let e = document.createElement("ul")
+                    e.classList.add("order")
+                    e.innerHTML = `
                 <li>
-                    <h3>Id:</h3> <span>${element.idModel}</span>
+                    <h3>Id:</h3> <span>${element.id}</span>
                 </li>
-                <li>
-                    <h3>Username:</h3> <span>${element.username}</span>
+                <a href="/admin/order/user?username=${element.user.username}&date=${date}">
+                <li onclick="test()">
+                    <h3>Username:</h3> <span>${element.user.username}</span>
                 </li>
+                </a>
                 <li>
-                    <h3>Address</h3>
-                    <div>${element.addr}</div>
+                    <h3>Address :</h3><span>${element.user.addr}</span>
                 </li>
-                <li>
-                    <h3>Product type:</h3> <span>${element.Container}</span>
-                </li>
-                <li>
-                    <h3>Details</h3>
-                    <div>
-                        <span>${element.Kind}/</span>
-                        <span>${element.color}/</span>
-                        <span>${element.size}</span>
-                    </div>
-                </li>
-                <li>
+                          <li>
                     <h3>Phone</h3>
-                    <div>
-                        <span>${element.phone}</span>
-                    </div>
+                        <span>${element.user.phone}</span>
                 </li>
                 
                 `
-                document.getElementById("listofOder").appendChild(e)
-            });
+                    document.getElementById("listOforders").appendChild(e)
+                });
 
 
-        })
+            })
+
+        }
 
     </script>
     <a href="/admin"><i id="back-btn" class='bx bx-arrow-back'></i></a>

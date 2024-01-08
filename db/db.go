@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"structs"
+
 	"go.etcd.io/bbolt"
 )
 
@@ -31,21 +32,13 @@ func (db *DataBase) AddCommint(id int, Container, kind string, commint structs.U
 	return db.Stock.addCommint(id, Container, kind, commint)
 }
 
-func (db *DataBase) Buy(order Orders) error {
-	models, err := db.Stock.GetModelsInKind(order.IdModel, 0, order.Container, order.Kind)
-	if err != nil {
-		return err
-	}
-	if len(models) == 0 {
-		return errors.New("no data")
-	}
-	user := structs.User{}
-	err = db.Users.GetUser(order.Username, &user)
+func (db *DataBase) Buy(order *Orders) error {
 
+	user := structs.User{}
+	err := db.Users.GetUser(order.User.Username, &user)
 	if err == ErrUsereNotFound {
 		return err
 	}
-
 	if user.Phone == "" {
 		return errors.New("updata your number")
 	}
@@ -59,26 +52,48 @@ func (db *DataBase) Buy(order Orders) error {
 	if len(user.UserVisa.Number) == 0 {
 		return errors.New("add visa")
 	}
+	for KeyOfContainer, kind := range order.Item {
+		for keyKind, id := range kind {
+			for KeyId, size := range id {
+				models, err := db.Stock.GetModelsInKind(int(KeyId), 0, string(KeyOfContainer), string(keyKind))
+				if err != nil {
+					return err
+				}
+				if len(models) == 0 {
+					return errors.New("no data")
+				}
 
-	if _, ok := models[0].Sizes[order.SizeName]; !ok {
-		return ErrModelSizeNotFound
+				for KeyOfsize, color := range size {
+					if _, ok := models[0].Sizes[string(KeyOfsize)]; !ok {
+						return ErrModelSizeNotFound
+					}
+
+					for keyOfColor, qty := range color {
+
+						models[0].Sizes[string(KeyOfsize)][string(keyOfColor)] -= int(qty)
+						if models[0].Sizes[string(KeyOfsize)][string(keyOfColor)] <= 0 {
+							db.OutStock.add(&modelsOutStock{IdModel: int(KeyId), Container: string(KeyOfContainer), Kind: string(keyKind), Size: string(KeyOfsize), Color: string(keyOfColor)})
+							delete(models[0].Sizes[string(KeyOfsize)], string(keyOfColor))
+							db.Stock.UpdataSizeFromModel(int(KeyId), string(KeyOfContainer), string(keyKind), string(KeyOfsize), models[0].Sizes[string(KeyOfsize)])
+						} else {
+							db.Stock.UpdataSizeFromModel(int(KeyId), string(KeyOfContainer), string(keyKind), string(KeyOfsize), models[0].Sizes[string(KeyOfsize)])
+						}
+						if len(models[0].Sizes[string(KeyOfsize)]) == 0 {
+							db.Stock.DeleteSizeFromModel(int(KeyId), string(KeyOfContainer), string(keyKind), string(KeyOfsize))
+						}
+
+					}
+
+				}
+
+			}
+		}
+
 	}
-	order.Username = user.Name
-	order.UserAddr = fmt.Sprintf("%s/%s/%s" , user.UserAddr.City , user.UserAddr.Street ,  user.UserAddr.Area)
-	order.UserPhone = user.Phone  
+	order.User.Username = user.Name
+	order.User.UserAddr = fmt.Sprintf("%s/%s/%s", user.UserAddr.City, user.UserAddr.Street, user.UserAddr.Area)
+	order.User.UserPhone = user.Phone
 	db.Orders.Add(order)
-	models[0].Sizes[order.SizeName][order.Color]--
-	if models[0].Sizes[order.SizeName][order.Color] <= 0 {
-		db.OutStock.add(&modelsOutStock{IdModel: order.IdModel, Container: order.Container, Kind: order.Kind, Size: order.SizeName, Color: order.Color})
-		delete(models[0].Sizes[order.SizeName], order.Color)
-		db.Stock.UpdataSizeFromModel(order.IdModel, order.Container, order.Kind, order.SizeName, models[0].Sizes[order.SizeName])
-	} else {
-		db.Stock.UpdataSizeFromModel(order.IdModel, order.Container, order.Kind, order.SizeName, models[0].Sizes[order.SizeName])
-	}
-	if len(models[0].Sizes[order.SizeName]) == 0 {
-		db.Stock.DeleteSizeFromModel(order.IdModel, order.Container, order.Kind, order.SizeName)
-	}
-
 	return nil
 }
 
@@ -148,15 +163,6 @@ func OpenDirDataBase(name string) *DataBase {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	db.Orders.dataBase.Update(func(tx *bbolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte("orders"))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		return nil
-	})
 	MainDB = &db
 	return &db
 }

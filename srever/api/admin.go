@@ -39,12 +39,50 @@ func (admin *admin) setOrderApi() {
 	})
 
 	admin.adminGroup.POST("/order", func(ctx *gin.Context) {
-		orders := db.MainDB.Orders.Get()
+		date := ctx.PostForm("date")
+		if date == "" {
+			ctx.JSON(http.StatusOK, "Date is empty")
+			return
+		}
+		orders := db.MainDB.Orders.Get(date)
 		if orders == nil {
 			ctx.JSON(http.StatusOK, "")
 			return
 		}
 		ctx.JSON(http.StatusOK, orders)
+	})
+	admin.adminGroup.GET("/order/user", func(ctx *gin.Context) {
+		username, usernameFound := ctx.GetQuery("username")
+		date, dataFound := ctx.GetQuery("date")
+		if usernameFound == false || dataFound == false {
+			ctx.HTML(http.StatusOK, "order.html", nil)
+			return
+		}
+		Order := db.Orders{}
+		if err := db.MainDB.Orders.GetUser(date, username, &Order); err != nil {
+			ctx.HTML(http.StatusOK, "order.html", nil)
+			return
+		}
+		listBuy := [][]string{}
+		for  keyContainer , kind := range Order.Item {
+			 for keyKind , id := range kind {
+				  for keyid , size := range  id{
+					   for keySize , color := range size {
+							for keyColor , qty := range color {
+								 listBuy = append(listBuy, []string{fmt.Sprintf("%d" , keyid) ,string(keyContainer) , string(keyKind) , string(keySize) , string(keyColor) , fmt.Sprintf("%d" , qty) })
+							}
+					   }
+				  }
+			 }
+		}
+		fmt.Println(listBuy)
+		fmt.Println(Order.Item)
+		ctx.HTML(http.StatusOK, "listPayUser.html", gin.H{
+			"username": Order.User.Username,
+			"userPhone": Order.User.UserPhone,
+			"userAddr": Order.User.UserAddr, 
+			"listBuy" : listBuy,
+		})
 	})
 	admin.adminGroup.GET("/outstock", func(ctx *gin.Context) {
 		dataOfoutStock := db.MainDB.OutStock.Get()

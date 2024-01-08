@@ -209,43 +209,7 @@ func (u *user) AddVisa(username string, visa structs.Visa) error {
 
 }
 
-func (u *user) DeleteVisa(username, first3Number, last3Number string) error {
-	return u.dataBase.Batch(func(tx *bbolt.Tx) error {
 
-		for _, v := range first3Number {
-			if !unicode.IsNumber(v) {
-				return errors.New("first 3 number is not number")
-			}
-		}
-
-		for _, v := range last3Number {
-			if !unicode.IsNumber(v) {
-				return errors.New("last 3 number is not number")
-			}
-		}
-
-		b := tx.Bucket([]byte("users"))
-
-		usr := structs.User{}
-		if err := u.GetUser(username, &usr); err != nil {
-			return err
-		}
-
-
-
-
-		usr.UserVisa = structs.Visa{}
-
-		data, err := json.Marshal(usr)
-		if err != nil {
-			return err
-		}
-		b.Put([]byte(usr.Username), data)
-
-		return nil
-	})
-
-}
 
 func (u *user) UpdataPhone(username string, phone string) error {
 	return u.dataBase.Batch(func(tx *bbolt.Tx) error {

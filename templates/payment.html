@@ -278,29 +278,35 @@
                                 return false
                             }).then((err) => {
                                 if (err) return err
-                                let ordersToServer = []
-                                for (const d in Order) {
-                                    for (const s of Order[d]) {
-                                        let ContainerAndKind = s.whereIform.split("/")
-                                        for (let count = 0; count < s.qty; count++) {
-                                            ordersToServer[ordersToServer.length] = {
-                                                "idModel": Number(s.id.replace("p", "")),
-                                                "color": s.color,
-                                                "size": s.size,
-                                                "Container": ContainerAndKind[1],
-                                                "Kind": ContainerAndKind[2]
-                                            }
+                                let map = new Map()
+                                for (const f in Order) {
+                                    let o = Order[f]
+                                    let container = f.split("/")[1]
+                                    let kind = f.split("/")[2]
+                                    if (typeof map[container] != "object") {
+                                        map[container] = new Map()
+                                    }
+                                    if (typeof map[container][kind] != "object") {
+                                        map[container][kind] = new Map()
+                                    }
+                                    for (const z of o) {
+
+                                        if (typeof map[container][kind][z.id.replace("p", "")] != "object") {
+                                            map[container][kind][z.id.replace("p", "")] = new Map()
                                         }
 
+                                        if (typeof map[container][kind][z.id.replace("p", "")][z.size] != "object") {
+                                            map[container][kind][z.id.replace("p", "")][z.size] = new Map()
+                                        }
+                                        map[container][kind][z.id.replace("p", "")][z.size][z.color] = z.qty
                                     }
                                 }
-                                if (ordersToServer.length == 0) return;
                                 fetch("/user/buy", {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
                                     },
-                                    body: JSON.stringify(ordersToServer),
+                                    body: JSON.stringify(map),
                                 }).then(response => response.json()).then(result => {
                                     if (result != "OK") {
                                         alert(result)
@@ -312,35 +318,39 @@
 
                             })
                         } else {
-                            let ordersToServer = []
-                            for (const d in Order) {
-                                for (const s of Order[d]) {
-                                    let ContainerAndKind = s.whereIform.split("/")
-                                    for (let count = 0; count < s.qty; count++) {
-                                        ordersToServer[ordersToServer.length] = {
-                                            // if err come here 
-                                            "idModel": Number(s.id.replace("p", "")),
-                                            "color": s.color,
-                                            "size": s.size,
-                                            "Container": ContainerAndKind[1],
-                                            "Kind": ContainerAndKind[2]
-                                        }
+                            let map = new Map()
+                            for (const f in Order) {
+                                let o = Order[f]
+                                let container = f.split("/")[1]
+                                let kind = f.split("/")[2]
+                                if (typeof map[container] != "object") {
+                                    map[container] = new Map()
+                                }
+                                if (typeof map[container][kind] != "object") {
+                                    map[container][kind] = new Map()
+                                }
+                                for (const z of o) {
+
+                                    if (typeof map[container][kind][z.id.replace("p", "")] != "object") {
+                                        map[container][kind][z.id.replace("p", "")] = new Map()
                                     }
 
+                                    if (typeof map[container][kind][z.id.replace("p", "")][z.size] != "object") {
+                                        map[container][kind][z.id.replace("p", "")][z.size] = new Map()
+                                    }
+                                    map[container][kind][z.id.replace("p", "")][z.size][z.color] = z.qty
                                 }
                             }
-                            console.log(ordersToServer)
-                            if (ordersToServer.length == 0) return;
                             fetch("/user/buy", {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify(ordersToServer),
+                                body: JSON.stringify(map),
                             }).then(response => response.json()).then(result => {
                                 if (result != "OK") {
                                     alert(result)
-                                    alert("332")
+                                    // alert("297")
                                 } else {
                                     window.location = "/success"
                                 }
@@ -353,7 +363,7 @@
         }
 
         apiFecth.Get("/user/visa", (data) => {
-            
+
             if (data.length != 0) {
                 document.getElementById("oldvias").style.scale = 1
                 let toElias = ""
@@ -505,6 +515,9 @@
         function deleteCookie(name) {
             setCookie(name, null, null)
         }
+
+    </script>
+    <!-- <script src="/js/test.js"> -->
 
     </script>
 </body>

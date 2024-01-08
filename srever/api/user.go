@@ -20,33 +20,23 @@ func (user *user) setCheckoutApi() {
 		ctx.HTML(http.StatusOK, "payment.html", gin.H{})
 	})
 	user.userGroup.POST("/buy", func(ctx *gin.Context) {
-		username := sessions.Default(ctx).Get("username").(string)
-		orders := []db.Orders{}
 
-		type Err struct {
-			Id  int    `json:"id"`
-			ERR string `json:"err"`
-		}
-		err := []Err{}
-		if err := ctx.ShouldBindJSON(&orders); err != nil {
-			ctx.JSON(http.StatusOK, "check json")
+
+		var Item map[db.Container]map[db.Kind]map[db.Id]map[db.Size]map[db.Color]db.Qty 
+		orders := db.Orders{}
+
+		if err := ctx.ShouldBindJSON(&Item); err != nil {
+			ctx.JSON(http.StatusOK, err.Error())//"check json")
 			return
 		}
-		for _, v := range orders {
-			v.Username = username
-			if err_ := db.MainDB.Buy(v); err_ != nil {
-				if err_ != nil && err_ != db.ErrDataBase {
-					ctx.JSON(http.StatusOK, err_.Error())
-					return
-				}
-				err = append(err, Err{Id: v.IdModel, ERR: err_.Error()})
-			}
+
+		orders.Item = Item
+		orders.User.Username = sessions.Default(ctx).Get("username").(string)
+
+		if err := db.MainDB.Buy(&orders); err != nil {
+			ctx.JSON(http.StatusOK, err.Error())
 		}
-		if len(err) == 0 {
-			ctx.JSON(http.StatusOK, "OK")
-		} else {
-			ctx.JSON(http.StatusOK, &err)
-		}
+		ctx.JSON(http.StatusOK, "OK")
 
 	})
 }
@@ -112,6 +102,9 @@ func (user *user) setInformationApi() {
 	user.userGroup.POST("/addr", func(ctx *gin.Context) {
 		username := sessions.Default(ctx).Get("username").(string)
 		addr := structs.Addr{}
+		addr.City = strings.TrimSpace(addr.City)
+		addr.Area = strings.TrimSpace(addr.Area)
+		addr.Street = strings.TrimSpace(addr.Street)
 
 		if err := ctx.ShouldBindJSON(&addr); err != nil {
 			ctx.JSON(http.StatusOK, "check the json plz")
