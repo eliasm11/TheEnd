@@ -11,14 +11,14 @@ import (
 )
 
 var (
-	ErrUserOpenDatabase = errors.New("can't open database")
-	ErrUserExist        = errors.New("user is already exists")
-	ErrUsereNotFound    = errors.New("user Doesn't exist")
+	ErrUserOpenDatabase = errors.New("Can't reach to database")
+	ErrUserExist        = errors.New("User is already exists")
+	ErrUsereNotFound    = errors.New("User not found")
 
-	ErrUserNameIsShortOrEmpty = errors.New("username is short or empty")
+	ErrUserNameIsShortOrEmpty = errors.New("Username is short or empty")
 	ErrUserEmailInvalid       = errors.New("Email is Invalid ")
 
-	ErrUserPasswordIsSome         = errors.New("the same password")
+	ErrUserPasswordIsSome         = errors.New("Enter a different password")
 	ErrUserPasswordIsShortOrEmpty = errors.New("Password is short or empty")
 
 	ErrUserAddrCity   = errors.New("City is Invalid")
@@ -28,15 +28,15 @@ var (
 	ErrUservisaInvalidNumber         = errors.New("Visa Number is Invalid")
 	ErrUservisaInvalidCvv            = errors.New("Visa Cvv is Invalid")
 	ErrUservisaInvalidExpirationDate = errors.New("Visa ExpirationDate is Invalid")
-	ErrUservisaNumberIsExit          = errors.New("visa Number Is Exit")
-	ErrUservisaIsExit                = errors.New("visa  Already added")
+	ErrUservisaNumberIsExit          = errors.New("Visa number is exists")
+	ErrUservisaIsExit                = errors.New("This Visa already added")
 	ErrUserPhoneNumberInvalid        = errors.New("is NOT a valid phone number")
 	ErrUserFirstNameInvalid          = errors.New("First Name  is Invalid")
 	ErrUserNameInvalid               = errors.New("Name  is Invalid")
-	ErrUserNotStrongPassword         = errors.New("is NOT a strong password")
+	ErrUserNotStrongPassword         = errors.New("Weak password")
 
-	ErrUserNameIslong          = errors.New("username Must be less than 20")
-	ErrUserNameNotStartLetter  = errors.New("username Must start with a letter")
+	ErrUserNameIslong          = errors.New("Username must be less than 20")
+	ErrUserNameNotStartLetter  = errors.New("Username must start with a letter")
 	ErrUserNameNotAlphanumeric = errors.New("username Must all characters are alphanumeric")
 )
 
@@ -208,8 +208,6 @@ func (u *user) AddVisa(username string, visa structs.Visa) error {
 	})
 
 }
-
-
 
 func (u *user) UpdataPhone(username string, phone string) error {
 	return u.dataBase.Batch(func(tx *bbolt.Tx) error {

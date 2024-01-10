@@ -13,25 +13,25 @@ import (
 )
 
 var (
-	ErrDataBase = errors.New("data base err")
+	ErrDataBase = errors.New("Error in database")
 
-	ErrNotFoundInStock            = errors.New("not found in Stock")
-	ErrContainerIsExistInStock    = errors.New("Container  is exist")
-	ErrContainerIsNotExistInStock = errors.New("Container is not exist")
+	ErrNotFoundInStock            = errors.New("Not found in Stock")
+	ErrContainerIsExistInStock    = errors.New("Container is exists")
+	ErrContainerIsNotExistInStock = errors.New("Container isn't exists")
 	ErrContainerIsEmpty           = errors.New("Name of Container is Empty")
-	ErrKindNotFound               = errors.New("cant found the kind")
-	ErrKindIsExited               = errors.New(" kind is exited ")
+	ErrKindNotFound               = errors.New("Can't find this kind")
+	ErrKindIsExited               = errors.New("Kind is exists")
 	ErrKindIsEmpty                = errors.New("Name of Kind is Empty")
 
-	ErrModelSize         = errors.New("model size is empty or Colors is empty")
-	ErrModelPrice        = errors.New("Price is Not acceptable")
-	ErrModelDescription  = errors.New("Description is Not acceptable")
-	ErrModelLinkesImage  = errors.New("linkes Image is empty")
+	ErrModelSize         = errors.New("The size or colors are empty")
+	ErrModelPrice        = errors.New("Price isn't acceptable")
+	ErrModelDescription  = errors.New("Product name isn't acceptable")
+	ErrModelLinkesImage  = errors.New("Image link is empty")
 	ErrModelSizeNotFound = errors.New("Size not found")
 	ErrModelIdNotFound   = errors.New("Id of Product not Found")
 
-	ErrModelCommintEmpty = errors.New("Commint is not accptable")
-	ErrModelCommintStars = errors.New("Stars is not accptable")
+	ErrModelCommintEmpty = errors.New("Comment isn't accptable")
+	ErrModelCommintStars = errors.New("Stars isn't accptable")
 )
 
 type stock struct {

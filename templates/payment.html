@@ -187,10 +187,36 @@
             let expireDateMonth = document.getElementById("expire-dateMonth").value
             let cvv = document.getElementById("cvv").value
 
-            if (name.length == 0 || phone.length == 0 || addr.length == 0) return
+            if (name.length == 0) {
+                alert("name is Empty")
+                return
+            }
+            if (phone.length == 0) {
+                alert("Phone is Empty")
+                return
+
+            }
+            if (addr.length == 0) {
+                alert("Address is Empty")
+                return
+            }
             if (methodPay == 'add') {
-                if (numberOfvias.length == 0 || expireDateDays.length == 0 || expireDateMonth.length == 0 ||
-                    cvv.length == 0) return;
+                if (numberOfvias.length == 0) {
+                    alert("Visa number  is Empty")
+                    return
+                }
+                if (expireDateDays.length == 0) {
+                    alert("Expiration date is Empty")
+                    return
+                }
+                if (expireDateMonth.length == 0) {
+                    alert("Expiration date is Empty")
+                    return
+                }
+                if (cvv.length == 0) {
+                    alert("CVV is Empty")
+                    return
+                }
             }
             fetch("/user/name", {
                 method: "POST",

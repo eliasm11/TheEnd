@@ -41,8 +41,14 @@
         function getOrders() {
             document.getElementById("listOforders").innerHTML = ""
             let date = document.getElementById("date").value.split("-")
-            date[1] = date[1].replace("0", "")
-            date[2] = date[2].replace("0", "")
+            if (date[1][0] == '0' ){
+                date[1] = date[1].replace("0", "")
+            }
+            if (date[2][0] == '0' ){
+                date[2] = date[2].replace("0", "")
+                console.log("yes")
+            }
+            
             date = date[0] + "-" + date[1] + "-" + date[2]
  
             fetch("/admin/order", {
