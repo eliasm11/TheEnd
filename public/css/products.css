@@ -254,7 +254,6 @@ header {
 
 .product-img {
     height: 330px;
-    max-width: 310px;
     border-radius: 10px;
     margin-bottom: .4rem;
 }
