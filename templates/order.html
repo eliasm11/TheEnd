@@ -68,6 +68,7 @@
                     let e = document.createElement("ul")
                     e.classList.add("order")
                     e.innerHTML = `
+                    
                 <li>
                     <h3>Id:</h3> <span>${element.id}</span>
                 </li>
@@ -77,11 +78,14 @@
                 </li>
                 </a>
                 <li>
+                    <h3>Phone</h3>
+                    <span>${element.user.phone}</span>
+                </li>
+                <li>
                     <h3>Address :</h3><span>${element.user.addr}</span>
                 </li>
-                          <li>
-                    <h3>Phone</h3>
-                        <span>${element.user.phone}</span>
+                <li>
+                    <span class="det">More Details...</span>
                 </li>
                 
                 `
