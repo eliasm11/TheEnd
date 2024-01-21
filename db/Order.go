@@ -19,6 +19,7 @@ var (
 	ErrOrdersType      = errors.New("Type is empty")
 	ErrOrderNotFound   = errors.New("Order id not found")
 )
+
 type UserOrder struct {
 	Username  string `json:"username"`
 	UserAddr  string `json:"addr"`
@@ -134,7 +135,7 @@ func (o *order) Add(order *Orders) error {
 											for keyColor := range color {
 												if _, ok := oldOlder.Item[keyContainer][keyKind][keyid][keySize][keyColor]; ok == false {
 													oldOlder.Item[keyContainer][keyKind][keyid][keySize][keyColor] = order.Item[keyContainer][keyKind][keyid][keySize][keyColor]
-												}else {
+												} else {
 													oldOlder.Item[keyContainer][keyKind][keyid][keySize][keyColor] += order.Item[keyContainer][keyKind][keyid][keySize][keyColor]
 												}
 											}
@@ -202,4 +203,3 @@ func itob(v int) []byte {
 	binary.BigEndian.PutUint64(b, uint64(v))
 	return b
 }
-

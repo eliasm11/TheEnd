@@ -35,9 +35,7 @@
         if (document.getElementById("date").value != "") {
             getOrders()
         }
-        function test(){
-            console.log("fsdfdsfs")
-        }
+
         function getOrders() {
             document.getElementById("listOforders").innerHTML = ""
             let date = document.getElementById("date").value.split("-")
@@ -72,11 +70,11 @@
                 <li>
                     <h3>Id:</h3> <span>${element.id}</span>
                 </li>
-                <a href="/admin/order/user?username=${element.user.username}&date=${date}">
-                <li onclick="test()">
+                
+                <li>
                     <h3>Username:</h3> <span>${element.user.username}</span>
                 </li>
-                </a>
+                
                 <li>
                     <h3>Phone</h3>
                     <span>${element.user.phone}</span>
@@ -84,9 +82,11 @@
                 <li>
                     <h3>Address :</h3><span>${element.user.addr}</span>
                 </li>
+                <a href="/admin/order/user?username=${element.user.username}&date=${date}">
                 <li>
                     <span class="det">More Details...</span>
                 </li>
+            </a>
                 
                 `
                     document.getElementById("listOforders").appendChild(e)

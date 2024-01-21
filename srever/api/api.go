@@ -162,8 +162,8 @@ func (api *Api) setGuestApi(server *gin.Engine) {
 			ctx.Next()
 			return
 		}
-		Number, _ := db.MainDB.Stock.GetNumberModelsInKind(pathArray[0], pathArray[1])
-		if listModels, err := db.MainDB.Stock.GetModelsInKind(Number, 12, pathArray[0], pathArray[1]); err == nil {
+
+		if listModels, err := db.MainDB.Stock.GetModelsKind(12, pathArray[0], pathArray[1]); err == nil {
 			ctx.HTML(http.StatusOK, "products.html", gin.H{
 
 				"container":  pathArray[0],
@@ -244,7 +244,7 @@ func (api *Api) setGuestApi(server *gin.Engine) {
 		}
 
 		session.Set("user", newuser.Username+","+newuser.Password)
-		session.Set("username" , newuser.Username)
+		session.Set("username", newuser.Username)
 		session.Save()
 
 		ctx.JSON(http.StatusOK, "create")

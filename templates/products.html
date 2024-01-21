@@ -105,7 +105,7 @@
         }
 
         let fetchTime = true
-        let id = 0 
+        let id = 0
         document.addEventListener('DOMContentLoaded', function (e) {
             document.addEventListener('scroll', function (e) {
                 let documentHeight = document.body.scrollHeight;
@@ -117,16 +117,18 @@
                     let containerAndKind = window.location.pathname
                     containerAndKind = containerAndKind.replace("/", "").split("/")
                     if (fetchTime) {
-                        fetch(`/product?kind=${containerAndKind[1]}&container=${containerAndKind[0]}&id=${lastid -2}`, {
+                        fetch(`/product?kind=${containerAndKind[1]}&container=${containerAndKind[0]}&id=${lastid - 2}`, {
                             method: "GET"
                         }).then(re => re.json()).then(data => {
                             if (data != null) {
+
                                 for (const f of data) {
+                                    if (f.id == lastid) {
+                                        continue
+                                    }
                                     new ProductDataBase(f)
                                 }
-
                                 setTimeout(() => { fetchTime = true }, 100)
-
                             }
                         })
                         fetchTime = false
